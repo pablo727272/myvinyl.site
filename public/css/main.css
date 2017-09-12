@@ -1,3 +1,40 @@
+body {
+    background-image: url("/images/bg01.png");
+    background-repeat: repeat;
+}
+
+.top-banner {
+    border-radius: 0;
+}
+
+img {
+    border-radius: 3px;
+}
+
 .navbar {
     margin-bottom: 0px;
+}
+
+.navbar-right li {
+    margin: 10px 5px 0px 5px;
+}
+
+.login-buttons-row .btn {
+    margin: 0px 5px 0px 0px;
+}
+
+.navbar-brand>img {
+    margin-top: -5px;
+}
+
+.profile-buttons-row .btn {
+    margin: 0px 5px 0px 0px;
+}
+
+.table td,th {
+   text-align: center;
+}
+
+.table-img-center {
+    margin: auto;
 }

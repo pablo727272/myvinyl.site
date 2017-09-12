@@ -32,14 +32,110 @@ mongoose.connect('mongodb://localhost/myvinyl', function(mongooseErr) {
 })
 
 var UserSchema = new mongoose.Schema({
-    username:  String,
-    password: String,
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    password: {
+        type: String,
+        required: true,
+        unique: true,
+    },
     created: {
         type: Date,
         default: function(){ return new Date() }
-    }
+    },
+    firstName: {
+        type: String,
+        required: false,
+        unique: false,
+    },
+    lastName: {
+        type: String,
+        required: false,
+        unique: false,
+    },
+    email: {
+        type: String,
+        required: false,
+        unique: true,
+    },
+    email: {
+        type: Date,
+        required: false,
+        unique: false,
+    },
+    favoriteArtist: {
+        type: String,
+        required: false,
+        unique: false,
+    },
+    desertIslandLP1: {
+        type: String,
+        required: false,
+        unique: false,
+    },
+    desertIslandLP2: {
+        type: String,
+        required: false,
+        unique: false,
+    },
+    desertIslandLP2: {
+        type: String,
+        required: false,
+        unique: false,
+    },
 });
 var UserModel = mongoose.model('User', UserSchema)
+
+var LPSchema = new mongoose.Schema({
+    catalogNumber: {
+        type: String,
+        required: true,
+        unique: false,
+    },
+    artistName: {
+        type: String,
+        required: false,
+        unique: false,
+    },
+    albumName: {
+        type: String,
+        required: false,
+        unique: false,
+    },
+    albumYear: {
+        type: String,
+        required: false,
+        unique: false,
+    },
+    albumGenre: {
+        type: String,
+        required: false,
+        unique: false,
+    },
+    created: {
+        type: Date,
+        default: function(){ return new Date() }
+    },
+    mediaCondition: {
+        type: String,
+        required: false,
+        unique: false,
+    },
+    sleeveCondition: {
+        type: String,
+        required: false,
+        unique: false,
+    },
+    purchasePrice: {
+        type: Number,
+        required: false,
+        unique: false,
+    },
+});
+var LPModel = mongoose.model('LP', UserSchema)
 
 var checkIfLoggedIn = function(req, res, next){
     if ( req.session._id ) {

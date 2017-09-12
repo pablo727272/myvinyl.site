@@ -30,6 +30,7 @@
 
     <body>
 
+        <!-- start vue -->
         <div id="app">
 
         <!-- navbar start -->
@@ -50,16 +51,70 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
                         <li><router-link to="/">Home</router-link></li>
-                        <li><router-link to="/my-collection">My Collection</router-link></li>
                         <li><router-link to="/my-profile">My Profile</router-link></li>
+                        <li><router-link to="/my-collection">My Collection</router-link></li>
+                        <li><router-link to="/resources">Resources</router-link></li>
                         <li><router-link to="/about">About</router-link></li>
-                        <li><router-link to="/contact">Contact</router-link></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <!-- Signup/Login start  -->
-                        <li><router-link to="/signup">Sign Up</router-link></li>
-                        <li><router-link to="/login">Login</router-link></li>
-                        <!-- Signup/Login end  -->
+                        <!-- Signup modal start  -->
+                        <li>
+                            <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#signupModal">Sign Up</button>
+                            <div class="modal fade" id="signupModal" tabindex="-1" role="dialog">
+                              <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Sign Up</h4>
+                                  </div>
+                                  <div class="modal-body">
+                                      <form id="signup-form">
+                                          <input type="text" class="username form-control" placeholder="Username">
+                                          <br>
+                                          <input type="password" class="password form-control" placeholder="Password">
+                                          <br>
+                                          <input type="text" class="favoriteArtist form-control" placeholder="Favorite Artist">
+                                          <br>
+                                          <button type="button" class="btn btn-danger btn-md" type="submit">Submit!</button>
+                                          <br>
+                                      </form>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                  </div>
+                                </div><!-- /.modal-content -->
+                              </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
+                        </li>
+                        <!-- Signup modal end  -->
+                        <!-- Login modal start  -->
+                        <li>
+                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#loginModal">Login</button>
+                            <div class="modal fade" id="loginModal" tabindex="-1" role="dialog">
+                              <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Login</h4>
+                                  </div>
+                                  <div class="modal-body">
+                                      <form id="login-form">
+                                          <input type="text" class="username form-control" placeholder="Username">
+                                          <br>
+                                          <input type="password" class="password form-control" placeholder="Password">
+                                          <br>
+                                          <button type="button" class="btn btn-danger btn-md" type="submit">Submit!</button>
+                                          <br>
+                                      </form>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                  </div>
+                                </div><!-- /.modal-content -->
+                              </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
+                        </li>
+                        <!-- Login modal end  -->
                     </ul>
                 </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
@@ -67,22 +122,23 @@
         <!-- navbar end -->
 
         <!-- header image -->
-        <img src="/images/vinyl-01-v3-v2.svg" class="img-responsive">
+        <img src="/images/vinyl-01-v3-v2.svg" class="img-responsive top-banner">
 
-        <!-- vue spa begin -->
+        <!-- vue router begin -->
         <router-view></router-view>
-        <!-- vue spa end -->
+        <!-- vue router end -->
 
         <!-- footer, copyright info -->
         <footer>
             <hr>
             <div class="row text-center">
-                <p><router-link to="/">Home</router-link> | <router-link to="/my-collection">My Collection</router-link> | <router-link to="/my-profile">My Profile</router-link> | <router-link to="/about">About</router-link> | <router-link to="/contact">Contact</router-link></p>
+                <p><router-link to="/">Home</router-link> | <router-link to="/my-profile">My Profile</router-link> | <router-link to="/my-collection">My Collection</router-link> | <router-link to="/resources">Resources</router-link> | <router-link to="/about">About</router-link></p>
                 <small>Copyright &copy; Paul Humphrey. All rights reserved.</small>
             </div>
         </footer>
 
         </div>
+        <!-- end vue -->
 
         <!-- custom js -->
         <script src="/js/main.js"></script>
