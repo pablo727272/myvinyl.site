@@ -104,6 +104,9 @@ let myCollection = {
                 </tbody>
             </table>
         </div>
+        <!-- TODAY'S LINE GRAPH AREA START -->
+        <canvas id="line-chart-today"></canvas>
+        <!-- TODAY'S LINE GRAPH AREA END -->
     </div>
     `
 }
