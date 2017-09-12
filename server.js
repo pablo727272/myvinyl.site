@@ -40,12 +40,12 @@ var UserSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-        unique: true,
     },
     created: {
         type: Date,
         default: function(){ return new Date() }
     },
+    // CLEAN THESE UP
     firstName: {
         type: String,
         required: false,
@@ -60,11 +60,6 @@ var UserSchema = new mongoose.Schema({
         type: String,
         required: false,
         unique: true,
-    },
-    email: {
-        type: Date,
-        required: false,
-        unique: false,
     },
     favoriteArtist: {
         type: String,
@@ -204,28 +199,49 @@ app.get('/logout', function(req, res){
 })
 
 app.post('/signup', function(req, res){
-    // this user object has a plain-text password
-    // we must hash the password before we save the user
-    var newUser = new UserModel(req.body)
-    bcrypt.genSalt(11, function(saltErr, salt){
-        if (saltErr) {console.log(saltErr)}
-        console.log('salt generated: ', salt)
-
-        bcrypt.hash(newUser.password, salt, function(hashErr, hashedPassword){
-            if ( hashErr){ console.log(hashErr) }
-            newUser.password = hashedPassword
-
-            newUser.save(function(saveErr, user){
-                if ( saveErr ) { console.log(saveErr)}
-                else {
-                    req.session._id = user._id // this line is what actually logs the user in.
-                    res.send({success:'success!'})
-                }
-            })
-        })
-
+    console.log('body? ', req.body)
+    var newUser = new UserModel({
+        username:req.body.username,
+        password:req.body.password
+    })
+    // res.cookie('_id', newUser._id, {httpOnly:true})
+    // sessions[newUser._id] = newUser
+    // console.log(newUser)
+    newUser.save(function(err){
+        if (err){
+            console.log('err! ', err)
+            res.send(err)}
+        else{
+            console.log('saved the user')
+            res.send('saved!')
+        }
     })
 })
+
+// MAYBE LATER
+// app.post('/signup', function(req, res){
+//     // this user object has a plain-text password
+//     // we must hash the password before we save the user
+//     var newUser = new UserModel(req.body)
+//     bcrypt.genSalt(11, function(saltErr, salt){
+//         if (saltErr) {console.log(saltErr)}
+//         console.log('salt generated: ', salt)
+//
+//         bcrypt.hash(newUser.password, salt, function(hashErr, hashedPassword){
+//             if ( hashErr){ console.log(hashErr) }
+//             newUser.password = hashedPassword
+//
+//             newUser.save(function(saveErr, user){
+//                 if ( saveErr ) { console.log(saveErr)}
+//                 else {
+//                     req.session._id = user._id // this line is what actually logs the user in.
+//                     res.send({success:'success!'})
+//                 }
+//             })
+//         })
+//
+//     })
+// })
 
 app.post('/login', function(req, res){
     UserModel.findOne({username: req.body.username}, function(err, user){

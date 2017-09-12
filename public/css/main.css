@@ -38,3 +38,13 @@ img {
 .table-img-center {
     margin: auto;
 }
+
+.fourohfour {
+    background-image: url("/images/stars.jpg");
+    margin: 0 0 -20px 0;
+    padding: 10px 0 20px 0;
+}
+
+.fourohfour {
+    color: lightgray;
+}

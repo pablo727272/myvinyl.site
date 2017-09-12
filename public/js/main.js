@@ -1,31 +1,3 @@
-$(document).ready(function(){
-
-    $('#signup-form').on('submit', function(event){
-        event.preventDefault()
-        var signupInfo = {
-            username : $('#signup-form .username').val(),
-            password : $('#signup-form .password').val(),
-        }
-        $.post('/signup', signupInfo, function(data){
-            console.log(data)
-            window.location.href="/dashboard"
-        })
-    })
-
-    $('#login-form').on('submit', function(event){
-        event.preventDefault()
-        var signupInfo = {
-            username : $('#login-form .username').val(),
-            password : $('#login-form .password').val(),
-        }
-        $.post('/login', signupInfo, function(data){
-            console.log(data)
-            window.location.href="/dashboard"
-        })
-    })
-
-})
-
 let index = {
     template:
     `
@@ -38,60 +10,12 @@ let index = {
         </div>
         <br>
         <div class="row text-center login-buttons-row">
-            <!-- Signup modal start  -->
+            <!-- Signup modal button start  -->
             <button type="button" class="btn btn-success btn-md" data-toggle="modal" data-target="#signupModal">Sign Up</button>
-            <div class="modal fade" id="signupModal" tabindex="-1" role="dialog">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Sign Up</h4>
-                  </div>
-                  <div class="modal-body">
-                      <form id="signup-form">
-                          <input type="text" class="username form-control" placeholder="Username">
-                          <br>
-                          <input type="password" class="password form-control" placeholder="Password">
-                          <br>
-                          <input type="text" class="favoriteArtist form-control" placeholder="Favorite Artist">
-                          <br>
-                          <button type="button" class="btn btn-danger btn-md" type="submit">Submit!</button>
-                          <br>
-                      </form>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  </div>
-                </div><!-- /.modal-content -->
-              </div><!-- /.modal-dialog -->
-            </div><!-- /.modal -->
-            <!-- Signup modal start  -->
-            <!-- Login modal start  -->
+            <!-- Signup modal button end  -->
+            <!-- Login modal button start  -->
             <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#loginModal">Login</button>
-            <div class="modal fade" id="loginModal" tabindex="-1" role="dialog">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Login</h4>
-                  </div>
-                  <div class="modal-body">
-                      <form id="login-form">
-                          <input type="text" class="username form-control" placeholder="Username">
-                          <br>
-                          <input type="password" class="password form-control" placeholder="Password">
-                          <br>
-                          <button type="button" class="btn btn-danger btn-md" type="submit">Submit!</button>
-                          <br>
-                      </form>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  </div>
-                </div><!-- /.modal-content -->
-              </div><!-- /.modal-dialog -->
-            </div><!-- /.modal -->
-            <!-- Login modal end  -->
+            <!-- Login modal button end  -->
         </div>
     </div>
     `
@@ -376,6 +300,20 @@ let resources = {
     `
 }
 
+let fourohfour = {
+    template:
+    `
+    <div>
+    <div class="text-center fourohfour">
+        <h1>404</h1>
+        <br>
+        <img src="/images/twilight-zone.jpg" class="responsive">
+        <br><br>
+        <h4><em>It is a dimension as vast as space and as timeless as infinity.<br>It is the middle ground between light and shadow,<br>between science and superstition,<br>and it lies between the pit of man's fears and the summit of his knowledge.<br>This is the dimension of imagination.<br>It is an area which we call the Twilight Zone.</em></h4>
+    </div>
+    `
+}
+
 var myRouter = new VueRouter({
     routes: [
         {
@@ -402,10 +340,61 @@ var myRouter = new VueRouter({
             path: '/resources',
             component: resources,
         },
+        {
+            path: '*',
+            component: fourohfour,
+        },
     ]
 })
 
 var mainVm = new Vue({
     el: '#app',
+    data: {
+        username: '',
+        password: '',
+        favoriteArtist: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        favoriteArtist: '',
+        desertIslandLP1: '',
+        desertIslandLP2: '',
+        desertIslandLP3: '',
+        catalogNumber: '',
+        artistName: '',
+        albumName: '',
+        albumYear: '',
+        albumGenre: '',
+        mediaCondition: '',
+        sleeveCondition: '',
+        purchasePrice: '',
+    },
     router: myRouter,
+    methods: {
+        signup: function(event){
+            event.preventDefault()
+            console.log('clicked on signup-form submit')
+            var signupInfo = {
+                username : this.username,
+                password : this.password,
+                favoriteArtist : this.favoriteArtist,
+            }
+            console.log(signupInfo)
+            $.post('/signup', signupInfo, (data) => {
+                myRouter.push({ path: 'my-profile' })
+            })
+        },
+        login: function(event){
+            event.preventDefault()
+            console.log('clicked on login-form submit')
+            var loginInfo = {
+                username : this.username,
+                password : this.password,
+            }
+            $.post('/login', loginInfo, (data) => {
+                console.log(data)
+                myRouter.push({ path: 'my-profile' })
+            })
+        }
+    }
 })
