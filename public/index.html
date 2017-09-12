@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <!-- vue.js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.min.js"></script>
+        <!-- vue router -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-router/2.5.3/vue-router.js"></script>
+        <!-- jQuery js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <!-- bootstrap js -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+        <meta charset="utf-8"/>
+        <title>MyVinyl - Login</title>
+        <!-- mobile ready -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- favicons -->
+        <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+        <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+        <link rel="icon" type="image/png" href="/images/favicon-96x96.png" sizes="96x96">
+        <!-- bootstrap css -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+            crossorigin="anonymous">
+        <!-- google fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Bellefair|Lobster+Two|Lora|Roboto" rel="stylesheet">
+        <!-- custom css -->
+        <link rel="stylesheet" href="/css/main.css">
+    </head>
+
+    <body>
+
+        <div id="app">
+
+        <!-- navbar start -->
+        <nav class="navbar navbar-default"><!-- open navbar -->
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    </button>
+                    <router-link to="/" class="navbar-brand"><img src="/images/favicon-32x32.png"></router-link>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li><router-link to="/">Home</router-link></li>
+                        <li><router-link to="/my-collection">My Collection</router-link></li>
+                        <li><router-link to="/my-profile">My Profile</router-link></li>
+                        <li><router-link to="/about">About</router-link></li>
+                        <li><router-link to="/contact">Contact</router-link></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <!-- Signup/Login start  -->
+                        <li><router-link to="/signup">Sign Up</router-link></li>
+                        <li><router-link to="/login">Login</router-link></li>
+                        <!-- Signup/Login end  -->
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav><!-- close navbar -->
+        <!-- navbar end -->
+
+        <!-- header image -->
+        <img src="/images/vinyl-01-v3-v2.svg" class="img-responsive">
+
+        <!-- vue spa begin -->
+        <router-view></router-view>
+        <!-- vue spa end -->
+
+        <!-- footer, copyright info -->
+        <footer>
+            <hr>
+            <div class="row text-center">
+                <p><router-link to="/">Home</router-link> | <router-link to="/my-collection">My Collection</router-link> | <router-link to="/my-profile">My Profile</router-link> | <router-link to="/about">About</router-link> | <router-link to="/contact">Contact</router-link></p>
+                <small>Copyright &copy; Paul Humphrey. All rights reserved.</small>
+            </div>
+        </footer>
+
+        </div>
+
+        <!-- custom js -->
+        <script src="/js/main.js"></script>
+
+    </body>
+
+</html>
