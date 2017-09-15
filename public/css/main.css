@@ -1,6 +1,26 @@
 body {
     background-image: url("/images/bg01.png");
     background-repeat: repeat;
+    font-family: 'Gentium Book Basic', serif;
+}
+
+p {
+    font-size: 1.25em;
+}
+
+.footer-link-text {
+    font-size: 1em;
+}
+
+/*google fonts*/
+/*font-family: 'Righteous', cursive;*/
+/*font-family: 'Berkshire Swash', cursive;*/
+/*font-family: 'Contrail One', cursive;*/
+/*font-family: 'Julius Sans One', sans-serif;*/
+/*font-family: 'Gentium Book Basic', serif;*/
+
+h1,h2,h3,h4, .btn {
+    font-family: 'Righteous', cursive;
 }
 
 .top-banner {
@@ -13,6 +33,11 @@ img {
 
 .navbar {
     margin-bottom: 0px;
+    font-family: 'Righteous', cursive;
+}
+
+.top-login-buttons-row {
+    display: inline-flex;
 }
 
 .navbar-right li {
@@ -47,4 +72,9 @@ img {
 
 .fourohfour {
     color: lightgray;
+}
+
+.lpImage {
+    max-height: 200px;
+    max-width: 200px;
 }

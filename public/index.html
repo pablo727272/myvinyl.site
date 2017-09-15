@@ -10,10 +10,10 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <!-- bootstrap js -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-        <!-- chart.js cdn -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
         <meta charset="utf-8"/>
-        <title>MyVinyl - Login</title>
+        <!-- chart.js cdn -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+        <title>My Vinyl Site</title>
         <!-- mobile ready -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- favicons -->
@@ -23,7 +23,7 @@
         <!-- bootstrap css -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <!-- google fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Bellefair|Lobster+Two|Lora|Roboto" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Berkshire+Swash|Contrail+One|Gentium+Book+Basic|Julius+Sans+One|Righteous" rel="stylesheet">
         <!-- custom css -->
         <link rel="stylesheet" href="/css/main.css">
     </head>
@@ -51,70 +51,93 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
                         <li><router-link to="/">Home</router-link></li>
-                        <li><router-link to="/my-profile">My Profile</router-link></li>
-                        <li><router-link to="/my-collection">My Collection</router-link></li>
+                        <li><router-link to="/profile">Profile</router-link></li>
+                        <li><router-link to="/collection">Collection</router-link></li>
                         <li><router-link to="/resources">Resources</router-link></li>
                         <li><router-link to="/about">About</router-link></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <!-- Signup modal start  -->
-                        <li>
-                            <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#signupModal">Sign Up</button>
-                            <div class="modal fade" id="signupModal" tabindex="-1" role="dialog">
-                              <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                  <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Sign Up</h4>
-                                  </div>
-                                  <div class="modal-body">
-                                      <form id="signup-form">
-                                          <input type="text" v-model="username" class="username form-control" placeholder="Username">
-                                          <br>
-                                          <input type="password" v-model="password" class="password form-control" placeholder="Password">
-                                          <br>
-                                          <input type="text" v-model="favoriteArtist" class="favoriteArtist form-control" placeholder="Favorite Artist">
-                                          <br>
-                                          <button class="btn btn-danger btn-md" type="submit" v-on:click="signup" data-dismiss="modal">Submit!</button>
-                                          <br>
-                                      </form>
-                                  </div>
-                                  <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                  </div>
-                                </div><!-- /.modal-content -->
-                              </div><!-- /.modal-dialog -->
-                            </div><!-- /.modal -->
-                        </li>
-                        <!-- Signup modal end  -->
-                        <!-- Login modal start  -->
-                        <li>
-                            <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#loginModal">Login</button>
-                            <div class="modal fade" id="loginModal" tabindex="-1" role="dialog">
-                              <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                  <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Login</h4>
-                                  </div>
-                                  <div class="modal-body">
-                                      <form id="login-form">
-                                          <input type="text" v-model="username" class="username form-control" placeholder="Username">
-                                          <br>
-                                          <input type="password" v-model="password" class="password form-control" placeholder="Password">
-                                          <br>
-                                          <button class="btn btn-danger btn-md" type="submit" v-on:click="login" data-dismiss="modal">Submit!</button>
-                                          <br>
-                                      </form>
-                                  </div>
-                                  <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                  </div>
-                                </div><!-- /.modal-content -->
-                              </div><!-- /.modal-dialog -->
-                            </div><!-- /.modal -->
-                        </li>
-                        <!-- Login modal end  -->
+                        <!-- signup / login buttons start -->
+                        <div v-if="!isLoggedIn" class="top-login-buttons-row">
+                            <!-- Signup modal start  -->
+                            <li>
+                                <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#signupModal">Sign Up</button>
+                                <div class="modal fade" id="signupModal" tabindex="-1" role="dialog">
+                                  <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title">Sign Up</h4>
+                                      </div>
+                                      <div class="modal-body">
+                                          <form id="signup-form">
+                                              <input type="text" v-model="username" class="username form-control" placeholder="Username">
+                                              <br>
+                                              <input type="password" v-model="password" class="password form-control" placeholder="Password">
+                                              <br>
+                                              <input type="text" v-model="firstName" class="firstName form-control" placeholder="First Name">
+                                              <br>
+                                              <input type="text" v-model="lastName" class="lastName form-control" placeholder="Last Name">
+                                              <br>
+                                              <input type="email" v-model="email" class="email form-control" placeholder="Email">
+                                              <br>
+                                              <input type="text" v-model="favoriteArtist" class="favoriteArtist form-control" placeholder="Favorite Artist">
+                                              <br>
+                                              <input type="text" v-model="desertIslandLP1" class="desertIslandLP1 form-control" placeholder="Desert Island LP #1">
+                                              <br>
+                                              <input type="text" v-model="desertIslandLP2" class="desertIslandLP2 form-control" placeholder="Desert Island LP #2">
+                                              <br>
+                                              <input type="text" v-model="desertIslandLP3" class="desertIslandLP3 form-control" placeholder="Desert Island LP #3">
+                                              <br>
+                                              <button class="btn btn-danger btn-md" type="submit" v-on:click="signup" data-dismiss="modal">Submit!</button>
+                                              <br>
+                                          </form>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                      </div>
+                                    </div><!-- /.modal-content -->
+                                  </div><!-- /.modal-dialog -->
+                                </div><!-- /.modal -->
+                            </li>
+                            <!-- Signup modal end  -->
+                            <!-- Login modal start  -->
+                            <li>
+                                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#loginModal">Login</button>
+                                <div class="modal fade" id="loginModal" tabindex="-1" role="dialog">
+                                  <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title">Login</h4>
+                                      </div>
+                                      <div class="modal-body">
+                                          <form id="login-form">
+                                              <input type="text" v-model="username" class="username form-control" placeholder="Username">
+                                              <br>
+                                              <input type="password" v-model="password" class="password form-control" placeholder="Password">
+                                              <br>
+                                              <button class="btn btn-danger btn-md" type="submit" v-on:click="login" data-dismiss="modal">Submit!</button>
+                                              <br>
+                                          </form>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                      </div>
+                                    </div><!-- /.modal-content -->
+                                  </div><!-- /.modal-dialog -->
+                                </div><!-- /.modal -->
+                            </li>
+                            <!-- Login modal end  -->
+                        </div>
+                        <!-- signup / login buttons end -->
+                        <!-- logout button start -->
+                        <div v-else>
+                            <li>
+                                Welcome {{firstName}}!&nbsp;&nbsp; <a href="/logout"><button class="btn btn-danger btn-sm" id="logout-button">Logout</button></a>
+                            </li>
+                        </div>
+                        <!-- logout button end -->
                     </ul>
                 </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
@@ -122,7 +145,7 @@
         <!-- navbar end -->
 
         <!-- header image -->
-        <img src="/images/vinyl-01-v3-v2.svg" class="img-responsive top-banner">
+        <img src="/images/my-vinyl-site-banner-v3-2200.jpg" class="img-responsive top-banner">
 
         <!-- vue router begin -->
         <router-view></router-view>
@@ -132,10 +155,11 @@
         <footer>
             <hr>
             <div class="row text-center">
-                <p><router-link to="/">Home</router-link> | <router-link to="/my-profile">My Profile</router-link> | <router-link to="/my-collection">My Collection</router-link> | <router-link to="/resources">Resources</router-link> | <router-link to="/about">About</router-link></p>
+                <p class="footer-link-text"><router-link to="/">Home</router-link> | <router-link to="/profile">Profile</router-link> | <router-link to="/collection">Collection</router-link> | <router-link to="/resources">Resources</router-link> | <router-link to="/about">About</router-link></p>
                 <small>Copyright &copy; Paul Humphrey. All rights reserved.</small>
             </div>
         </footer>
+        <br>
 
         </div>
         <!-- end vue -->
@@ -143,6 +167,7 @@
         <!-- custom js -->
         <script src="/js/main.js"></script>
         <script src="/js/chart.js"></script>
+        <!-- <script src="/js/lp.js"></script> -->
 
     </body>
 

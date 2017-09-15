@@ -3,6 +3,13 @@ var bodyParser = require('body-parser')
 var mongoose = require('mongoose')
 var bcrypt = require('bcryptjs')
 var sessionsModule = require('client-sessions')
+var request = require('request')
+var Discogs = require('disconnect').Client
+
+var dis = new Discogs({
+    consumerKey: 'GknZtKeWnvYMYoCbKbfq',
+    consumerSecret: 'kSjxyprmLuFGGRdPOoETjOSzHphGyWbq'
+}).database()
 
 var app = express()
 
@@ -45,7 +52,6 @@ var UserSchema = new mongoose.Schema({
         type: Date,
         default: function(){ return new Date() }
     },
-    // CLEAN THESE UP
     firstName: {
         type: String,
         required: false,
@@ -76,7 +82,7 @@ var UserSchema = new mongoose.Schema({
         required: false,
         unique: false,
     },
-    desertIslandLP2: {
+    desertIslandLP3: {
         type: String,
         required: false,
         unique: false,
@@ -129,6 +135,11 @@ var LPSchema = new mongoose.Schema({
         required: false,
         unique: false,
     },
+    lowestValue: {
+        type: Number,
+        required: false,
+        unique: false,
+    }
 });
 var LPModel = mongoose.model('LP', UserSchema)
 
@@ -159,10 +170,6 @@ app.use(function(req, res, next){
     next()
 })
 
-// app.get('/', function(req, res){
-//     res.sendFile('./html/login.html', {root:'./public'})
-// })
-
 // app.get('/session-test', function(req, res){
 //     console.log('session? ', req.session)
 //     if ( !req.session.counter ) {
@@ -189,59 +196,40 @@ app.get('/dashboard', checkIfLoggedIn, function(req, res){
 
 app.get('/me', checkIfLoggedInForAjax, function(req, res){
     UserModel.findOne({_id:req.session._id}, function(err, user){
+        console.log('user',user);
         res.send(user)
     })
 })
 
 app.get('/logout', function(req, res){
+    console.log('user logged out');
     req.session.reset()
     res.redirect('/')
 })
 
 app.post('/signup', function(req, res){
-    console.log('body? ', req.body)
-    var newUser = new UserModel({
-        username:req.body.username,
-        password:req.body.password
-    })
-    // res.cookie('_id', newUser._id, {httpOnly:true})
-    // sessions[newUser._id] = newUser
-    // console.log(newUser)
-    newUser.save(function(err){
-        if (err){
-            console.log('err! ', err)
-            res.send(err)}
-        else{
-            console.log('saved the user')
-            res.send('saved!')
-        }
+    // this user object has a plain-text password
+    // we must hash the password before we save the user
+    var newUser = new UserModel(req.body)
+    bcrypt.genSalt(11, function(saltErr, salt){
+        if (saltErr) {console.log(saltErr)}
+        console.log('salt generated: ', salt)
+
+        bcrypt.hash(newUser.password, salt, function(hashErr, hashedPassword){
+            if ( hashErr){ console.log(hashErr) }
+            newUser.password = hashedPassword
+
+            newUser.save(function(saveErr, user){
+                if ( saveErr ) { console.log(saveErr)}
+                else {
+                    req.session._id = user._id // this line is what actually logs the user in.
+                    res.send({success:'success!'})
+                }
+            })
+        })
+
     })
 })
-
-// MAYBE LATER
-// app.post('/signup', function(req, res){
-//     // this user object has a plain-text password
-//     // we must hash the password before we save the user
-//     var newUser = new UserModel(req.body)
-//     bcrypt.genSalt(11, function(saltErr, salt){
-//         if (saltErr) {console.log(saltErr)}
-//         console.log('salt generated: ', salt)
-//
-//         bcrypt.hash(newUser.password, salt, function(hashErr, hashedPassword){
-//             if ( hashErr){ console.log(hashErr) }
-//             newUser.password = hashedPassword
-//
-//             newUser.save(function(saveErr, user){
-//                 if ( saveErr ) { console.log(saveErr)}
-//                 else {
-//                     req.session._id = user._id // this line is what actually logs the user in.
-//                     res.send({success:'success!'})
-//                 }
-//             })
-//         })
-//
-//     })
-// })
 
 app.post('/login', function(req, res){
     UserModel.findOne({username: req.body.username}, function(err, user){
@@ -269,16 +257,29 @@ app.post('/login', function(req, res){
     })
 })
 
-// // 404 page
-// app.get('/404', function(req,res){
-//     res.sendFile('./html/404.html', {root: './public'})
-// })
-//
-// // 404 error handling middleware
-// app.use(function(req, res, next){
-//     res.status(404)
-//     res.redirect('/404')
-// })
+app.get('/api/v1/discogs/byrelease', function(req,res){
+    console.log('sending data to discogs');
+    console.log('req query name',req.query.catalogNumber);
+    dis.search(
+        {
+            catno:req.query.catalogNumber,
+            items:1,
+            per_page:1,
+            type:'release',
+        },
+        function(err, response, body){
+        if (err) {console.log(err);}
+        console.log('res', response)
+        // console.log('res', body)
+        let artistID = response.results[0].id
+        dis.getMaster(artistID,function(err,response,body){
+            console.log(response);
+            console.log(body);
+            res.status(200).send(response);
+        })
+        console.log('artist ID?',artistID);
+    })
+})
 
 // USE THIS CODE ONCE PUSHED UP TO DROPLET
 // try {

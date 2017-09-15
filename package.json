@@ -13,7 +13,9 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.0",
     "client-sessions": "^0.8.0",
+    "disconnect": "^1.2.1",
     "express": "^4.15.4",
-    "mongoose": "^4.11.11"
+    "mongoose": "^4.11.11",
+    "request": "^2.81.0"
   }
 }
