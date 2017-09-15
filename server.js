@@ -165,10 +165,13 @@ var checkIfLoggedInForAjax = function(req, res, next){
     }
 }
 
-app.use(function(req, res, next){
-    console.log('session? ', req.session)
-    next()
-})
+app.use(function(req, res, next) {
+    console.log('URL', req.url);
+    console.log('BODY', req.body);
+    console.log('SESSION', req.session);
+    console.log('QUERY', req.query)
+    next();
+});
 
 // app.get('/session-test', function(req, res){
 //     console.log('session? ', req.session)
@@ -232,29 +235,46 @@ app.post('/signup', function(req, res){
 })
 
 app.post('/login', function(req, res){
-    UserModel.findOne({username: req.body.username}, function(err, user){
-        if ( err ) { console.log('failed to find user')}
-        else if ( !user ) {
-            console.log('no user found')
-            res.send('<h1>Failed to log in</h1>')
-        }
-        else {
-            // at this point, we know they're trying to log in as someone who DOES exist in our database, but do they have the right password?
-            bcrypt.compare(req.body.password, user.password, function(bcryptErr, matched){
-                if ( bcryptErr ) { console.log(bcryptErr)}
-                //matched will be either true or false
-                else if ( !matched ) {
-                    console.log('passwords dont match')
-                    res.send('<h1>Failed to log in</h1>')
-                }
-                else {
-                    req.session._id = user._id
-                    res.send({success:'success!'})
-                }
+    if (req.session._id) {
+        UserModel.findById(
+            req.session._id,
+            function(err,data){
+                if ( err ) { console.log('failed to find user')}
+                res.send(data)
+                return
+            }
+        )
+    }
+    else {
+        UserModel.findOne({username: req.body.username}, function(err, user){
+            if ( err ) { console.log('failed to find user')}
+            else if ( !user ) {
+                console.log('no user found')
+                res.send('<h1>Failed to log in</h1>')
+                return
+            }
+            else {
+                // at this point, we know they're trying to log in as someone who DOES exist in our database, but do they have the right password?
+                bcrypt.compare(req.body.password, user.password, function(bcryptErr, matched){
+                    if ( bcryptErr ) { console.log(bcryptErr)}
+                    //matched will be either true or false
+                    else if ( !matched ) {
+                        console.log('passwords dont match')
+                        res.send('<h1>Failed to log in</h1>')
+                        return
 
-            })
-        }
-    })
+                    }
+                    else {
+                        req.session._id = user._id
+                        res.send(user)
+                        return
+
+                    }
+
+                })
+            }
+        })
+    }
 })
 
 app.get('/api/v1/discogs/byrelease', function(req,res){
@@ -271,13 +291,13 @@ app.get('/api/v1/discogs/byrelease', function(req,res){
         if (err) {console.log(err);}
         console.log('res', response)
         // console.log('res', body)
-        let artistID = response.results[0].id
-        dis.getMaster(artistID,function(err,response,body){
+        let releaseID = response.results[0].id
+        dis.getRelease(releaseID,function(err,response,body){
             console.log(response);
             console.log(body);
             res.status(200).send(response);
         })
-        console.log('artist ID?',artistID);
+        console.log('release ID?',releaseID);
     })
 })
 

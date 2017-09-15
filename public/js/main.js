@@ -1,19 +1,5 @@
 // home page component
 let index = {
-    data: function(){
-        return {
-            username: '',
-            firstName: '', // WHY ISN'T THIS WORKING ON HOME PAGE...  WELCOME firstName????
-        }
-    },
-    created: function(){
-        $.get('/me', (dataFromServer) => {
-            console.log(this)
-            console.log('data from server',dataFromServer)
-            this.username = dataFromServer.username
-            this.firstName = dataFromServer.firstName
-        })
-    },
     template:
     `
     <div class="container">
@@ -108,7 +94,7 @@ let collection = {
             mediaCondition: '',
             sleeveCondition: '',
             purchasePrice: '',
-            lowestValue: '',
+            lowest_price: '',
             collection: [],
         }
     },
@@ -126,7 +112,7 @@ let collection = {
             this.mediaCondition = dataFromServer.mediaCondition
             this.sleeveCondition = dataFromServer.sleeveCondition
             this.purchasePrice = dataFromServer.purchasePrice
-            this.lowestValue = dataFromServer.lowestValue
+            this.lowest_price = dataFromServer.lowest_price
             //     for (var i=0; i<dataFromServer.length; i++) {
             //         dataFromServer[i].fdEntryDate = new Date(dataFromServer[i].fdEntryDate)
             //     }
@@ -151,7 +137,7 @@ let collection = {
                         <th></th>
                         <th>Artist Name</th>
                         <th>Album Name</th>
-                        <th>Current Value</th>
+                        <th>Lowest Price</th>
                         <th>Album Year</th>
                         <th>Album Genre</th>
                         <th>Catalog #</th>
@@ -207,9 +193,11 @@ let addLP = {
             mediaCondition: '',
             sleeveCondition: '',
             purchasePrice: '',
-            lowestValue: '',
+            lowest_price: '',
             collection: [],
             lpImage: '',
+            album_notes: '',
+            albumLabel: '',
         }
     },
     created: function(){
@@ -224,10 +212,18 @@ let addLP = {
             event.preventDefault()
             console.log('this',this)
             console.log('this catalog number',this.catalogNumber);
-            $.get('/api/v1/discogs/byrelease?type=release?catalogNumber=' + this.catalogNumber,
+            $.get('/api/v1/discogs/byrelease?type=release&catalogNumber=' + this.catalogNumber,
             (dataFromServer) => {
                 console.log('data from server',dataFromServer)
-                this.lpImage = dataFromServer.results.thumb
+                this.lpImage = dataFromServer.thumb
+                this.lowest_price = dataFromServer.lowest_price
+                this.artistName = dataFromServer.artists[0].name
+                this.albumName = dataFromServer.title
+                this.albumLabel = dataFromServer.labels[0].name
+                this.catalogNumber = dataFromServer.labels[0].catno
+                this.albumYear = dataFromServer.year
+                this.albumGenre = dataFromServer.genres[0]
+                this.album_notes = dataFromServer.notes
             })
         }
     },
@@ -260,15 +256,18 @@ let addLP = {
         <!-- LP search results go here -->
         <div class="row">
             <div class="col-md-2"></div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <img v-bind:src="lpImage" class="img-responsive lpImage">
             </div>
-            <div class="col-md-5">
-                <p>Artist Name: artist name...</p>
-                <p>Album Name: album name...</p>
-                <p>Catalog #: catalog #...</p>
-                <p>Album Year: album year...</p>
-                <p>Album Genre: genre...</p>
+            <div class="col-md-6">
+                <p>Artist Name: {{artistName}}</p>
+                <p>Album Name: {{albumName}}</p>
+                <p>Album Year: {{albumYear}}</p>
+                <p>Album Genre: {{albumGenre}}</p>
+                <p>Album Label: {{albumLabel}}</p>
+                <p>Catalog #: {{catalogNumber}}</p>
+                <p>Release Notes: {{album_notes}}</p>
+                <p><b>Lowest Price: {{lowest_price}}</b></p>
             </div>
             <div class="col-md-2"></div>
         </div>
@@ -308,13 +307,6 @@ let addLP = {
                 <h3>Purchase Price?</h3>
                 <!-- need to add v-model="purchasePrice" -->
                 <input type="text" class="form-control" placeholder="$?">
-                <br><br>
-                <button type="submit" class="form-control btn btn-danger">
-                    Click To Get Current Lowest Value
-                </button>
-                <br>
-                <!-- current lowest value search results go here -->
-                <h3>Current Lowest Value: $VALUE</h3>
                 <br>
                 <button type="submit" class="form-control btn btn-success">
                     ADD LP TO COLLECTION
@@ -342,7 +334,7 @@ let about = {
                 <img src="/images/paul-headshot-300.png" class="img-responsive img-circle">
             </div>
             <div class="col-md-8">
-                <b><p>I created this site to allow lovers of vinyl LPs an easy way to catalog their collection and keep track of its current lowest value, so you can see what buyers are willing to pay at a bare minimum.</p>
+                <b><p>I created this site to allow lovers of vinyl LPs an easy way to catalog their collection and keep track of its current lowest price, so you can see what buyers are willing to pay at a bare minimum.</p>
                 <p>Please feel free to <a href="mailto:paul@longmontcomputer.com?subject=Feedback from myvinyl.site">email me</a> with any comments or suggestions. I welcome your feedback!</p></b>
                 <p>~Paul Humphrey, creator of myvinyl.site</p>
                 <p><i>Nothing sounds like vinyl.</i></p>
@@ -462,11 +454,26 @@ var mainVm = new Vue({
         mediaCondition: '',
         sleeveCondition: '',
         purchasePrice: '',
-        lowestValue: '',
+        lowest_price: '',
         collection: [],
         isLoggedIn: false,
+        album_notes: '',
+        albumLabel: '',
     },
     router: myRouter,
+    created : function(){
+        console.log('CREATING')
+
+        $.post('/login', (data) => {
+            console.log('asdfghj',data)
+            if (Object.keys(data).length) {
+                console.log('sdfnwrwrdmmfdb',this)
+                myRouter.push({ path: 'collection' })
+                this.isLoggedIn = true
+                this.firstName = data.firstName
+            }
+        })
+    },
     methods: {
         // signup method
         signup: function(event){
@@ -500,6 +507,7 @@ var mainVm = new Vue({
                 console.log(data)
                 myRouter.push({ path: 'collection' })
                 this.isLoggedIn = true
+                this.firstName = data.firstName
             })
         },
         // logout method
@@ -507,9 +515,6 @@ var mainVm = new Vue({
             event.preventDefault()
             console.log('clicked on logout-button submit')
             $.post('/logout')
-        },
-        created : function(){
-            getFreshData()
         },
         // add an LP to the collection method
         createLP : function(event){
@@ -523,8 +528,8 @@ var mainVm = new Vue({
             console.log('album genre',this.albumGenre)
             console.log('media condition',this.mediaCondition)
             console.log('sleeve condition',this.sleeveCondition)
-            var profitLoss = +this.lowestValue - +this.purchasePrice
-            console.log('profit loss should be lowest value - purchase price',profitLoss)
+            var profitLoss = +this.lowest_price - +this.purchasePrice
+            console.log('profit loss should be lowest price - purchase price',profitLoss)
 
             $.ajax({
                 url: '/newLP',
@@ -537,7 +542,7 @@ var mainVm = new Vue({
                     albumGenre: this.albumGenre,
                     mediaCondition: this.mediaCondition,
                     sleeveCondition: this.sleeveCondition,
-                    lowestValue: this.lowestValue,
+                    lowest_price: this.lowest_price,
                     purchasePrice: this.purchasePrice,
                     profitLoss: this.profitLoss,
                 }),
@@ -561,7 +566,7 @@ var mainVm = new Vue({
             this.mediaCondition = ''
             this.sleeveCondition = ''
             this.purchasePrice = ''
-            this.lowestValue = ''
+            this.lowest_price = ''
             console.log('doing the thing')
         }
     }
