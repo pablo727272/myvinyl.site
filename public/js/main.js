@@ -208,15 +208,16 @@ let addLP = {
         })
     },
     methods: {
+        // search discogs api via catalog number
         getDiscogsLP: function(event){
             event.preventDefault()
             console.log('this',this)
             console.log('this catalog number',this.catalogNumber);
             $.get('/api/v1/discogs/byrelease?type=release&catalogNumber=' + this.catalogNumber,
             (dataFromServer) => {
-                console.log('data from server',dataFromServer)
+                console.log('data from discogs api call',dataFromServer)
                 this.lpImage = dataFromServer.thumb
-                this.lowest_price = dataFromServer.lowest_price
+                this.lowest_price = dataFromServer.lowest_price || 0
                 this.artistName = dataFromServer.artists[0].name
                 this.albumName = dataFromServer.title
                 this.albumLabel = dataFromServer.labels[0].name
@@ -224,6 +225,40 @@ let addLP = {
                 this.albumYear = dataFromServer.year
                 this.albumGenre = dataFromServer.genres[0]
                 this.album_notes = dataFromServer.notes
+            })
+        },
+        // add an LP to the collection method
+        createLP: function(event){
+            event.preventDefault()
+            console.log('clicked on create lp button submit')
+            var createLPInfo = {
+                catalogNumber: this.catalogNumber,
+                artistName: this.artistName,
+                albumName: this.albumName,
+                albumYear: this.albumYear,
+                albumGenre: this.albumGenre,
+                mediaCondition: this.mediaCondition || '',
+                sleeveCondition: this.sleeveCondition || '',
+                lowest_price: this.lowest_price,
+                purchasePrice: this.purchasePrice,
+                profitLoss: +this.lowest_price - +this.purchasePrice
+            }
+            console.log(createLPInfo)
+            $.post('/newLP', createLPInfo, (data) => {
+                myRouter.push({ path: 'add-lp' })
+                // after POST, clear out the form fields in the DOM so user can input another LP
+                console.log('clearing out the form and input fields')
+                this.catalogNumber = ''
+                this.artistName = ''
+                this.albumName = ''
+                this.albumYear = ''
+                this.albumGenre = ''
+                this.albumLabel = ''
+                this.mediaCondition = ''
+                this.sleeveCondition = ''
+                this.purchasePrice = ''
+                this.lpImage = ''
+                console.log('profit loss should be lowest price - purchase price',profitLoss)
             })
         }
     },
@@ -279,8 +314,8 @@ let addLP = {
             <div class="col-md-8">
                 <h4>If this matches your LP:</h4>
                 <h3>What is the condition of the media?</h3>
-                <!-- need to add v-model="mediaCondition" -->
-                <select class="form-control">
+                <select class="form-control" v-model="mediaCondition">
+                    <option value="" selected disabled>Choose Condition</option>
                     <option>Mint (M)</option>
                     <option>Near Mint (NM or M-)</option>
                     <option>Very Good Plus (VG+)</option>
@@ -291,8 +326,8 @@ let addLP = {
                     <option>Poor (P)</option>
                 </select>
                 <h3>What is the condition of the media?</h3>
-                <!-- need to add v-model="sleeveCondition" -->
-                <select class="form-control">
+                <select class="form-control" v-model="sleeveCondition">
+                    <option value="" selected disabled>Choose Condition</option>
                     <option>Mint (M)</option>
                     <option>Near Mint (NM or M-)</option>
                     <option>Very Good Plus (VG+)</option>
@@ -305,10 +340,10 @@ let addLP = {
                     <option>No Cover</option>
                 </select>
                 <h3>Purchase Price?</h3>
-                <!-- need to add v-model="purchasePrice" -->
-                <input type="text" class="form-control" placeholder="$?">
+                <input type="text" class="form-control" placeholder="for example, 1 or 1.75" v-model="purchasePrice">
+                <div v-if="!validator.isEmpty(purchasePrice) && !validator.isFloat(purchasePrice,{min:0})">Please enter a valid value: ex 1.75</div>
                 <br>
-                <button type="submit" class="form-control btn btn-success">
+                <button type="submit" class="form-control btn btn-success" v-on:click="createLP">
                     ADD LP TO COLLECTION
                 </button>
                 <br><br>
@@ -516,58 +551,5 @@ var mainVm = new Vue({
             console.log('clicked on logout-button submit')
             $.post('/logout')
         },
-        // add an LP to the collection method
-        createLP : function(event){
-            event.preventDefault()
-            // inside of a vue method, we can use `this` to access any data or method on that VM.
-            // always send an object when using AJAX
-            console.log('catalog #',this.catalogNumber)
-            console.log('artist name',this.artistName)
-            console.log('album name',this.albumName)
-            console.log('album year',this.albumYear)
-            console.log('album genre',this.albumGenre)
-            console.log('media condition',this.mediaCondition)
-            console.log('sleeve condition',this.sleeveCondition)
-            var profitLoss = +this.lowest_price - +this.purchasePrice
-            console.log('profit loss should be lowest price - purchase price',profitLoss)
-
-            $.ajax({
-                url: '/newLP',
-                type: 'POST',
-                data: JSON.stringify({
-                    catalogNumber: this.catalogNumber,
-                    artistName: this.artistName,
-                    albumName: this.albumName,
-                    albumYear: this.albumYear,
-                    albumGenre: this.albumGenre,
-                    mediaCondition: this.mediaCondition,
-                    sleeveCondition: this.sleeveCondition,
-                    lowest_price: this.lowest_price,
-                    purchasePrice: this.purchasePrice,
-                    profitLoss: this.profitLoss,
-                }),
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                success: function(dataFromServer) {
-                    // var that = this;
-                    console.log(dataFromServer)
-                    if ( dataFromServer.success ) {
-                        // only clear the form after we know the submission was successful
-                        getFreshData()
-                    }
-                }
-            })
-            // after ajax request, clear out the form fields in the DOM
-            this.catalogNumber = ''
-            this.artistName = ''
-            this.albumName = ''
-            this.albumYear = ''
-            this.albumGenre = ''
-            this.mediaCondition = ''
-            this.sleeveCondition = ''
-            this.purchasePrice = ''
-            this.lowest_price = ''
-            console.log('doing the thing')
-        }
     }
 })

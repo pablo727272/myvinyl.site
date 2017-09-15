@@ -93,7 +93,7 @@ var UserModel = mongoose.model('User', UserSchema)
 var LPSchema = new mongoose.Schema({
     catalogNumber: {
         type: String,
-        required: true,
+        required: false,
         unique: false,
     },
     artistName: {
@@ -116,6 +116,11 @@ var LPSchema = new mongoose.Schema({
         required: false,
         unique: false,
     },
+    albumLabel: {
+        type: String,
+        required: false,
+        unique: false,
+    },
     created: {
         type: Date,
         default: function(){ return new Date() }
@@ -134,14 +139,9 @@ var LPSchema = new mongoose.Schema({
         type: Number,
         required: false,
         unique: false,
-    },
-    lowestValue: {
-        type: Number,
-        required: false,
-        unique: false,
     }
 });
-var LPModel = mongoose.model('LP', UserSchema)
+var LPModel = mongoose.model('LP', LPSchema)
 
 var checkIfLoggedIn = function(req, res, next){
     if ( req.session._id ) {
@@ -204,12 +204,14 @@ app.get('/me', checkIfLoggedInForAjax, function(req, res){
     })
 })
 
+// log user out
 app.get('/logout', function(req, res){
     console.log('user logged out');
     req.session.reset()
     res.redirect('/')
 })
 
+// create a new user, salt and has password, save it in the db
 app.post('/signup', function(req, res){
     // this user object has a plain-text password
     // we must hash the password before we save the user
@@ -231,6 +233,17 @@ app.post('/signup', function(req, res){
             })
         })
 
+    })
+})
+
+// create a new LP record and save it in the database
+app.post('/newLP', function(req, res){
+    var newLP = new LPModel(req.body)
+    newLP.save(function(saveErr, lp){
+        if ( saveErr ) { console.log(saveErr)}
+        else {
+            res.send({success:'success!'})
+        }
     })
 })
 
