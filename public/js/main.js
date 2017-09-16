@@ -246,8 +246,6 @@ let addLP = {
             console.log(createLPInfo)
             $.post('/newLP', createLPInfo, (data) => {
                 myRouter.push({ path: 'add-lp' })
-                // after POST, clear out the form fields in the DOM so user can input another LP
-                console.log('clearing out the form and input fields')
                 this.catalogNumber = ''
                 this.artistName = ''
                 this.albumName = ''
@@ -258,7 +256,6 @@ let addLP = {
                 this.sleeveCondition = ''
                 this.purchasePrice = ''
                 this.lpImage = ''
-                console.log('profit loss should be lowest price - purchase price',profitLoss)
             })
         }
     },
@@ -325,7 +322,7 @@ let addLP = {
                     <option>Fair (F)</option>
                     <option>Poor (P)</option>
                 </select>
-                <h3>What is the condition of the media?</h3>
+                <h3>What is the condition of the sleeve?</h3>
                 <select class="form-control" v-model="sleeveCondition">
                     <option value="" selected disabled>Choose Condition</option>
                     <option>Mint (M)</option>
