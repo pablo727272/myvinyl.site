@@ -1,8 +1,8 @@
-1. enter catalog #
+1. enter catalog # and/or artist name and/or album name
 2. function to get discogs data
 3. display data on front-end
-(if there is no match, let user input their own data)
+(if there is no match, alert user to try again...  currently, no match crashes the server!!!)
 4. if user likes match...  enter media and sleeve condition, and purchase price (if known)
-5. display current market value
-6. if user wants to add lp, click submit, save LP to database and update the table displaying collection...
-7. on collection page, button to delete any LPs (remove from database)
+5. display discgos api data, current lowest value, etc...
+6. if user wants to add lp, click submit, save LP to database as a unique lp id
+7. on collection page, append a <table> with rows of new LP data...  sortable "columns"...  button to delete any LPs (remove from database)
