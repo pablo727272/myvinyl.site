@@ -98,7 +98,7 @@ let profile = {
                     </ol></h4>
             </div>
             <div class="col-md-4">
-                <img src="http://lorempixel.com/300/300" class="img-responsive img-circle">
+                <img src="http://lorempixel.com/300/300/abstract" class="img-responsive img-circle">
             </div>
         </div>
         <br>
@@ -106,6 +106,9 @@ let profile = {
             <router-link to="/add-lp"><button type="button" class="btn btn-success btn-md">Add LP</button></router-link>
             <router-link to="/collection"><button type="button" class="btn btn-primary btn-md">View Collection</button></router-link>
         </div>
+        <!-- CHARTS AREA START - WHY ISN'T THIS LOADING??? -->
+        <canvas id="genre-chart"></canvas>
+        <!-- CHARTS AREA END -->
     </div>
     `
 }
@@ -154,71 +157,34 @@ let collection = {
                         <th>Lowest Price</th>
                         <th>Album Year</th>
                         <th>Album Genre</th>
-                        <th>Catalog #</th>
                         <th>Purchase Price</th>
                         <th>Profit/Loss</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td><img src="http://lorempixel.com/100/100" class="img-responsive table-img-center"></td>
+                        <td><img src="http://lorempixel.com/100/100/technics" class="img-responsive table-img-center"></td>
                         <td>The Beatles</td>
-                        <td>Revolver</td>
+                        <td><em>Revolver</em></td>
                         <td>$9.99</td>
                         <td>1966</td>
                         <td>Rock</td>
-                        <td>LSD-666</td>
                         <td>$7.99</td>
-                        <td>+$2.99</td>
+                        <td>+$2.00</td>
                     </tr>
                     <tr>
-                        <td><img src="http://lorempixel.com/100/100" class="img-responsive table-img-center"></td>
+                        <td><img src="http://lorempixel.com/100/100/abstract" class="img-responsive table-img-center"></td>
                         <td>The Beatles</td>
-                        <td>Revolver</td>
-                        <td>$9.99</td>
-                        <td>1966</td>
+                        <td><em>Rubber Soul</em></td>
+                        <td>$5.99</td>
+                        <td>1965</td>
                         <td>Rock</td>
-                        <td>LSD-666</td>
                         <td>$7.99</td>
-                        <td>+$2.99</td>
+                        <td>-$2.00</td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <!-- CHARTS AREA START - WHY ISN'T THIS LOADING??? -->
-        <canvas id="genre-chart"></canvas>
-        <script>
-        new Chart(document.getElementById("genre-chart"), {
-          type: 'line',
-          data: {
-            labels: ['1 AM','2 AM','3 AM','4 AM','5 AM','6 AM','7 AM','8 AM','9 AM','10 AM','11 AM','12 PM','1 PM','2 PM','3 PM','4 PM','5 PM','6 PM','7 PM','8 PM','9 PM','10 PM','11 PM','12 AM'],
-            datasets: [{
-                data: [0,0,0,0,0,0,395,0,0,0,0,512,0,0,80,120,666,0,0,100,0,0,0,0],
-                label: "Calories Ingested",
-                borderColor: "green",
-                fill: true,
-              }, {
-                data: [0,0,0,0,0,100,-50,0,0,50,0,100,50,0,50,50,100,0,0,100,0,0,0,0],
-                label: "Mood",
-                borderColor: "blue",
-                fill: true,
-              }, {
-                data: [0,0,0,0,0,-300,0,0,0,-100,0,0,-100,0,0,0,0,0,0,-650,0,0,0,0],
-                label: "Calories Burned",
-                borderColor: "red",
-                fill: true,
-              },
-            ]
-          },
-          options: {
-            title: {
-              display: true,
-              text: 'Calories Ingested, Calories Burned, and Mood: Daily'
-            }
-          }
-        });
-        </script>
-        <!-- CHARTS AREA END -->
     </div>
     `
 }
@@ -308,8 +274,8 @@ let addLP = {
         <div class="row text-center">
             <hr>
             <h2>Add LP</h2>
-            <h4>Lookup your LP by Catalog Number</h4>
-            <small>(Found on the cover, spine, or inner label)</small>
+            <h4>Lookup your LP by Album Name and/or Catalog Number</h4>
+            <small>(Catalog # found on the cover, spine, or inner label)</small>
             <hr>
         </div>
 
@@ -317,7 +283,7 @@ let addLP = {
             <form id="add-lp-form" v-on:submit="getDiscogsLP($event)">
                 <div class="col-md-2"></div>
                 <div class="col-md-5">
-                    <input v-model="catalogNumber" type="text" class="catalogNumber form-control" placeholder="Catalog #" id="LPSearchBar">
+                    <input v-model="catalogNumber" type="text" class="catalogNumber form-control" placeholder="Album Name and/or Catalog #" id="LPSearchBar">
                 </div>
                 <div class="col-md-3">
                     <button type="button" class="btn btn-danger btn-md form-control" type="submit">Search!</button>
@@ -380,8 +346,8 @@ let addLP = {
                 </select>
                 <small><a href="http://www.recordcollectorsguild.org/modules.php?op=modload&name=Sections&file=index&req=viewarticle&artid=17&page=1" target="_blank">Click here to read about condition grading guidelines</a>.</small>
                 <h3>Purchase Price?</h3>
-                <input type="text" class="form-control" placeholder="for example, 1 or 1.75" v-model="purchasePrice">
-                <div v-if="!validator.isEmpty(purchasePrice) && !validator.isFloat(purchasePrice,{min:0})">Please enter a valid value: ex 1.75</div>
+                <input type="text" class="form-control" placeholder="for example, 0, 1, or 1.75" v-model="purchasePrice">
+                <div v-if="!validator.isEmpty(purchasePrice) && !validator.isFloat(purchasePrice,{min:0})">Please enter a valid value: e.g. 0, 1, or 1.75</div>
                 <br>
                 <button type="submit" class="form-control btn btn-success" v-on:click="createLP">
                     ADD LP TO COLLECTION
