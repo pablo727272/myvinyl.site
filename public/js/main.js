@@ -89,8 +89,8 @@ let profile = {
         <div class="row">
             <div class="col-md-8">
                 <h3>Name: {{firstName}} {{lastName}}</h3>
-                <h3>Favorite Artist: {{favoriteArtist}}<h3>
-                <h3>Desert Island LPs:<h3>
+                <h3>Favorite Artist: {{favoriteArtist}}</h3>
+                <h3>Desert Island LPs:</h3>
                     <h4><ol>
                         <li><em>{{desertIslandLP1}}</em></li>
                         <li><em>{{desertIslandLP2}}</em></li>
@@ -215,6 +215,7 @@ let addLP = {
             album_notes: '',
             albumLabel: '',
             releaseID: '',
+            validator:validator,
         }
     },
     created: function(){
@@ -300,7 +301,7 @@ let addLP = {
                     <input v-model="catalogNumber" type="text" class="catalogNumber form-control" placeholder="Album Name and/or Catalog #" id="LPSearchBar">
                 </div>
                 <div class="col-md-3">
-                    <button type="button" class="btn btn-danger btn-md form-control" type="submit">Search!</button>
+                    <button class="btn btn-danger btn-md form-control" type="submit">Search!</button>
                 </div>
             </form>
         </div>
@@ -520,17 +521,15 @@ var mainVm = new Vue({
     created : function(){
         console.log('CREATING')
 
-        // $.post('/login', (data) => {
-        //     console.log('login data:',data)
-        //     if (Object.keys(data).length) {
-        //         console.log('sdfnwrwrdmmfdb',this)
-        //         myRouter.push({ path: 'collection' })
-        //         this.isLoggedIn = true
-        //         this.firstName = data.firstName
-        //     } else {
-        //         console.log('something is wrong with login');
-        //     }
-        // })
+        $.get('/me', (data) => {
+            console.log('login data:',data)
+            if (data.username) {
+                this.isLoggedIn = true
+                this.firstName = data.firstName
+            } else {
+                console.log('something is wrong with login');
+            }
+        })
     },
     methods: {
         // signup method
