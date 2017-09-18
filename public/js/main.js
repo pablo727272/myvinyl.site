@@ -126,6 +126,7 @@ let collection = {
             lowest_price: '',
             collection: [],
             lpImage: '',
+            profitLoss: '',
         }
     },
     // DO I NEED ANOTHER .get to something like ('/lp-collection') to grab all needed data for the collection table???
@@ -135,17 +136,21 @@ let collection = {
             this.firstName = dataFromServer.firstName
             console.log('this from /me',this)
         })
+
         $.get('/me-lps', (dataFromServer) => {
             console.log('data from server',dataFromServer)
+            for (let i = 0; i < dataFromServer.length; i++) {
+                let lp = dataFromServer[i];
+                $.get('/api/v1/discogs/byrelease?type=release&catalogNumber=' + lp.catalogNumber,
+                (lpFromServer) => {
+                    console.log('data from discogs api call',lpFromServer)
+                    lp.lowest_price = lpFromServer.lowest_price
+                    lp.profitLoss = +lp.lowest_price - +lp.purchasePrice
+                }).then(()=>{this.$forceUpdate()})
+            }
+
             this.collection = dataFromServer
-            this.collection.forEach(function(lp){
-                $.get('/api/v1/discogs/byrelease?type=release&catalogNumber=' + this.catalogNumber,
-                (dataFromServer) => {
-                    console.log('data from discogs api call',dataFromServer)
-                    this.lowest_price = dataFromServer.lowest_price || 0
-                    this.profitLoss = +this.lowest_price - +this.purchasePrice
-                })
-            })
+
             console.log('this from /me-lps',this)
         })
     },
@@ -178,11 +183,11 @@ let collection = {
                     <tr v-for="lp in collection">
                         <td>{{lp.artistName}}</td>
                         <td><em>{{lp.albumName}}</em></td>
-                        <td>$ {{lp.lowest_price}}</td>
+                        <td>$ {{lp.lowest_price || 0}}</td>
                         <td>{{lp.albumYear}}</td>
                         <td>{{lp.albumGenre}}</td>
-                        <td>$ {{lp.purchasePrice}}</td>
-                        <td>$ {{lp.profitLoss}}</td>
+                        <td>$ {{lp.purchasePrice || 0}}</td>
+                        <td>$ {{lp.profitLoss || 0}}</td>
                         <td><img v-bind:src="lp.lpImage" class="img-responsive table-img-center"></td>
                     </tr>
                 </tbody>
