@@ -6,3 +6,29 @@
 5. display discgos api data, current lowest value, etc...
 6. if user wants to add lp, click submit, save LP to database as a unique lp id
 7. on collection page, append a <table> with rows of new LP data...  sortable "columns"...  button to delete any LPs (remove from database)
+
+
+SERVER JS:
+
+// delete an LP record and delete it from the database
+app.post('/removeLP', function(req, res){
+    req.body.owner = req.session._id
+    console.log('req session id',req.session._id);
+    var deletedLP = new LPModel(req.body)
+    console.log('new lp',deleteLP);
+    deletedLP.lps.find().pretty();
+})
+
+
+
+MAIN JS:
+
+methods: {
+    deleteLP: function(event){
+        event.preventDefault()
+        console.log('clicked on deleteLP submit')
+        $.post('/removeLP', (dataFromServer) => {
+            console.log('data from server',dataFromServer)
+            console.log('this from /removeLP',this)
+        })
+    },

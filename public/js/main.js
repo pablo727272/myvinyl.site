@@ -127,9 +127,9 @@ let collection = {
             collection: [],
             lpImage: '',
             profitLoss: '',
+            releaseID: '',
         }
     },
-    // DO I NEED ANOTHER .get to something like ('/lp-collection') to grab all needed data for the collection table???
     created : function(){
         $.get('/me', (dataFromServer) => {
             console.log('data from server',dataFromServer)
@@ -146,6 +146,8 @@ let collection = {
                     console.log('data from discogs api call',lpFromServer)
                     lp.lowest_price = lpFromServer.lowest_price
                     lp.profitLoss = +lp.lowest_price - +lp.purchasePrice
+                    this.releaseID = lp.releaseID
+                    console.log('this release id',this.releaseID);
                 }).then(()=>{this.$forceUpdate()})
             }
 
@@ -153,6 +155,18 @@ let collection = {
 
             console.log('this from /me-lps',this)
         })
+    },
+    methods: {
+        deleteLP: function(event, id, index){
+            console.log(id, 'lp release from dom!!!!!!!!!!!!!!!!!!!!!!!!')
+            event.preventDefault()
+            console.log('clicked on deleteLP submit')
+            $.post('/removeLP', {id: id}, (dataFromServer) => {
+                console.log('data from server',dataFromServer)
+                console.log('this from /removeLP',this)
+                this.collection.splice(index, 1);
+            })
+        },
     },
     template:
     `
@@ -169,26 +183,29 @@ let collection = {
             <table class="table table-hover">
                 <thead>
                     <tr>
+                        <th>Lowest Price</th>
                         <th>Artist Name</th>
                         <th>Album Name</th>
-                        <th>Lowest Price</th>
                         <th>Album Year</th>
                         <th>Album Genre</th>
                         <th>Purchase Price</th>
                         <th>Profit/Loss</th>
                         <th>Cover Image</th>
+                        <th>Release ID</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="lp in collection">
+                    <tr v-for="(lp, i) in collection">
+                        <td>$ {{lp.lowest_price || 0}}</td>
                         <td>{{lp.artistName}}</td>
                         <td><em>{{lp.albumName}}</em></td>
-                        <td>$ {{lp.lowest_price || 0}}</td>
                         <td>{{lp.albumYear}}</td>
                         <td>{{lp.albumGenre}}</td>
                         <td>$ {{lp.purchasePrice || 0}}</td>
                         <td>$ {{lp.profitLoss || 0}}</td>
                         <td><img v-bind:src="lp.lpImage" class="img-responsive table-img-center"></td>
+                        <td>{{lp.releaseID}}</td>
+                        <button type="submit" class="btn btn-danger btn-xs delete-item" v-on:click="deleteLP($event, lp.releaseID, i)">X</button>
                     </tr>
                 </tbody>
             </table>
@@ -215,7 +232,8 @@ let addLP = {
             album_notes: '',
             albumLabel: '',
             releaseID: '',
-            validator:validator,
+            validator: validator,
+            _id: '',
         }
     },
     created: function(){
@@ -266,6 +284,8 @@ let addLP = {
             }
             console.log(createLPInfo)
             $.post('/newLP', createLPInfo, (data) => {
+                collection._id = data
+                console.log('newlp data',collection._id);
                 myRouter.push({ path: 'add-lp' })
                 this.catalogNumber = ''
                 this.artistName = ''

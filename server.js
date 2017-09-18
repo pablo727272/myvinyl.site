@@ -258,9 +258,18 @@ app.post('/newLP', function(req, res){
     newLP.save(function(saveErr, lp){
         if ( saveErr ) { console.log(saveErr)}
         else {
-            res.send({success:'success!'})
+            res.status(200).send('success!')
         }
     })
+})
+
+// delete an LP record and delete it from the database
+app.post('/removeLP', function(req, res){
+    console.log('req body id',req.body.id);
+    LPModel.remove( { releaseID : req.body.id }, function(err){
+        if (err) { console.log('err',err)}
+        res.send();
+    } )
 })
 
 app.post('/login', function(req, res){
