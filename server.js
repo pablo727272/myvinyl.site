@@ -91,6 +91,9 @@ var UserSchema = new mongoose.Schema({
 var UserModel = mongoose.model('User', UserSchema)
 
 var LPSchema = new mongoose.Schema({
+    owner: {
+        type: mongoose.Schema.ObjectId
+    },
     catalogNumber: {
         type: String,
         required: false,
@@ -139,7 +142,9 @@ var LPSchema = new mongoose.Schema({
         type: Number,
         required: false,
         unique: false,
-    }
+    },
+    lpImage: String,
+    releaseID: Number,
 });
 var LPModel = mongoose.model('LP', LPSchema)
 
@@ -206,8 +211,15 @@ app.get('/me', checkIfLoggedInForAjax, function(req, res){
     })
 })
 
+app.get('/me-lps', checkIfLoggedInForAjax, function(req, res){
+    LPModel.find({owner:req.session._id}, function(err, lps){
+        console.log('lps',lps);
+        res.send(lps)
+    })
+})
+
 // log user out
-app.post('/logout', function(req, res){
+app.get('/logout', function(req, res){
     console.log('user logged out');
     req.session.reset()
     res.redirect('/')
@@ -240,7 +252,9 @@ app.post('/signup', function(req, res){
 
 // create a new LP record and save it in the database
 app.post('/newLP', function(req, res){
+    req.body.owner = req.session._id
     var newLP = new LPModel(req.body)
+    console.log('new lp',newLP);
     newLP.save(function(saveErr, lp){
         if ( saveErr ) { console.log(saveErr)}
         else {

@@ -131,9 +131,22 @@ let collection = {
     // DO I NEED ANOTHER .get to something like ('/lp-collection') to grab all needed data for the collection table???
     created : function(){
         $.get('/me', (dataFromServer) => {
-            console.log(this)
             console.log('data from server',dataFromServer)
             this.firstName = dataFromServer.firstName
+            console.log('this from /me',this)
+        })
+        $.get('/me-lps', (dataFromServer) => {
+            console.log('data from server',dataFromServer)
+            this.collection = dataFromServer
+            this.collection.forEach(function(lp){
+                $.get('/api/v1/discogs/byrelease?type=release&catalogNumber=' + this.catalogNumber,
+                (dataFromServer) => {
+                    console.log('data from discogs api call',dataFromServer)
+                    this.lowest_price = dataFromServer.lowest_price || 0
+                    this.profitLoss = +this.lowest_price - +this.purchasePrice
+                })
+            })
+            console.log('this from /me-lps',this)
         })
     },
     template:
@@ -151,7 +164,6 @@ let collection = {
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th></th>
                         <th>Artist Name</th>
                         <th>Album Name</th>
                         <th>Lowest Price</th>
@@ -159,28 +171,19 @@ let collection = {
                         <th>Album Genre</th>
                         <th>Purchase Price</th>
                         <th>Profit/Loss</th>
+                        <th>Cover Image</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td><img src="http://lorempixel.com/100/100/technics" class="img-responsive table-img-center"></td>
-                        <td>The Beatles</td>
-                        <td><em>Revolver</em></td>
-                        <td>$9.99</td>
-                        <td>1966</td>
-                        <td>Rock</td>
-                        <td>$7.99</td>
-                        <td>+$2.00</td>
-                    </tr>
-                    <tr>
-                        <td><img src="http://lorempixel.com/100/100/abstract" class="img-responsive table-img-center"></td>
-                        <td>The Beatles</td>
-                        <td><em>Rubber Soul</em></td>
-                        <td>$5.99</td>
-                        <td>1965</td>
-                        <td>Rock</td>
-                        <td>$7.99</td>
-                        <td>-$2.00</td>
+                    <tr v-for="lp in collection">
+                        <td>{{lp.artistName}}</td>
+                        <td><em>{{lp.albumName}}</em></td>
+                        <td>$ {{lp.lowest_price}}</td>
+                        <td>{{lp.albumYear}}</td>
+                        <td>{{lp.albumGenre}}</td>
+                        <td>$ {{lp.purchasePrice}}</td>
+                        <td>$ {{lp.profitLoss}}</td>
+                        <td><img v-bind:src="lp.lpImage" class="img-responsive table-img-center"></td>
                     </tr>
                 </tbody>
             </table>
@@ -206,6 +209,7 @@ let addLP = {
             lpImage: '',
             album_notes: '',
             albumLabel: '',
+            releaseID: '',
         }
     },
     created: function(){
@@ -230,9 +234,10 @@ let addLP = {
                 this.albumName = dataFromServer.title
                 this.albumLabel = dataFromServer.labels[0].name
                 this.catalogNumber = dataFromServer.labels[0].catno
-                this.albumYear = dataFromServer.year
+                this.albumYear = dataFromServer.year || 'NA'
                 this.albumGenre = dataFromServer.genres[0]
                 this.album_notes = dataFromServer.notes
+                this.releaseID = dataFromServer.id
             })
         },
         // add an LP to the collection method
@@ -245,11 +250,13 @@ let addLP = {
                 albumName: this.albumName,
                 albumYear: this.albumYear,
                 albumGenre: this.albumGenre,
-                mediaCondition: this.mediaCondition || '',
-                sleeveCondition: this.sleeveCondition || '',
+                mediaCondition: this.mediaCondition || 'NA',
+                sleeveCondition: this.sleeveCondition || 'NA',
                 lowest_price: this.lowest_price,
-                purchasePrice: this.purchasePrice,
-                profitLoss: +this.lowest_price - +this.purchasePrice
+                purchasePrice: this.purchasePrice || 0,
+                profitLoss: +this.lowest_price - +this.purchasePrice,
+                lpImage: this.lpImage,
+                releaseID: this.releaseID
             }
             console.log(createLPInfo)
             $.post('/newLP', createLPInfo, (data) => {
@@ -264,6 +271,8 @@ let addLP = {
                 this.sleeveCondition = ''
                 this.purchasePrice = ''
                 this.lpImage = ''
+                this.album_notes = ''
+                this.lowest_price = ''
             })
         }
     },
@@ -500,22 +509,23 @@ var mainVm = new Vue({
         isLoggedIn: false,
         album_notes: '',
         albumLabel: '',
+        releaseID: '',
     },
     router: myRouter,
     created : function(){
         console.log('CREATING')
 
-        $.post('/login', (data) => {
-            console.log('login data:',data)
-            if (Object.keys(data).length) {
-                console.log('sdfnwrwrdmmfdb',this)
-                myRouter.push({ path: 'collection' })
-                this.isLoggedIn = true
-                this.firstName = data.firstName
-            } else {
-                console.log('something is wrong with login');
-            }
-        })
+        // $.post('/login', (data) => {
+        //     console.log('login data:',data)
+        //     if (Object.keys(data).length) {
+        //         console.log('sdfnwrwrdmmfdb',this)
+        //         myRouter.push({ path: 'collection' })
+        //         this.isLoggedIn = true
+        //         this.firstName = data.firstName
+        //     } else {
+        //         console.log('something is wrong with login');
+        //     }
+        // })
     },
     methods: {
         // signup method
@@ -547,7 +557,7 @@ var mainVm = new Vue({
                 password : this.password,
             }
             $.post('/login', loginInfo, (data) => {
-                console.log(data)
+                console.log('170918',data)
                 myRouter.push({ path: 'collection' })
                 this.isLoggedIn = true
                 this.firstName = data.firstName
@@ -557,7 +567,7 @@ var mainVm = new Vue({
         logout: function(event){
             event.preventDefault()
             console.log('clicked on logout-button submit')
-            $.post('/logout')
+            window.location.href = '/logout'
         },
     }
 })
