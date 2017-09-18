@@ -506,12 +506,14 @@ var mainVm = new Vue({
         console.log('CREATING')
 
         $.post('/login', (data) => {
-            console.log('asdfghj',data)
+            console.log('login data:',data)
             if (Object.keys(data).length) {
                 console.log('sdfnwrwrdmmfdb',this)
                 myRouter.push({ path: 'collection' })
                 this.isLoggedIn = true
                 this.firstName = data.firstName
+            } else {
+                console.log('something is wrong with login');
             }
         })
     },

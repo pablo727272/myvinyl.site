@@ -207,7 +207,7 @@ app.get('/me', checkIfLoggedInForAjax, function(req, res){
 })
 
 // log user out
-app.get('/logout', function(req, res){
+app.post('/logout', function(req, res){
     console.log('user logged out');
     req.session.reset()
     res.redirect('/')
@@ -265,7 +265,7 @@ app.post('/login', function(req, res){
             if ( err ) { console.log('failed to find user')}
             else if ( !user ) {
                 console.log('no user found')
-                res.send('<h1>Failed to log in</h1>')
+                res.send('Failed to log in - no user found')
                 return
             }
             else {
@@ -275,7 +275,7 @@ app.post('/login', function(req, res){
                     //matched will be either true or false
                     else if ( !matched ) {
                         console.log('passwords dont match')
-                        res.send('<h1>Failed to log in</h1>')
+                        res.send('Failed to log in - passwords dont match')
                         return
 
                     }
