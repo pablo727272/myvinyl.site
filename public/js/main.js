@@ -342,7 +342,7 @@ let addLP = {
                 <p>Album Label: {{albumLabel}}</p>
                 <p>Catalog #: {{catalogNumber}}</p>
                 <p>Release Notes: {{album_notes}}</p>
-                <p><b>Lowest Price: {{lowest_price}}</b></p>
+                <p><b>Lowest Price: $ {{lowest_price}}</b></p>
             </div>
             <div class="col-md-2"></div>
         </div>
