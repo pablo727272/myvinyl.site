@@ -263,7 +263,7 @@ let collection = {
         </div>
         <hr>
         <div class="table-responsive">
-            <table class="table table-hover" id="lp-collection-table">
+            <table class="table" id="lp-collection-table">
                 <thead>
                     <tr>
                         <th v-on:click="sortLPs(0)">Lowest Price</th>
@@ -290,6 +290,8 @@ let collection = {
                         <td>{{lp.releaseID}}</td>
                         <button type="submit" class="btn btn-danger btn-xs delete-item" v-on:click="deleteLP($event, lp.releaseID, i)">X</button>
                     </tr>
+                </tbody>
+                <tfoot>
                     <tr>
                         <td>$ total lowest price</td>
                         <td></td>
@@ -301,7 +303,7 @@ let collection = {
                         <td></td>
                         <td></td>
                     </tr>
-                </tbody>
+                </tfoot>
             </table>
         </div>
     </div>
