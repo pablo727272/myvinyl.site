@@ -196,6 +196,60 @@ let collection = {
                 this.collection.splice(index, 1);
             })
         },
+        sortLPs: function (n) {
+          var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+          table = document.getElementById("lp-collection-table");
+          switching = true;
+          //Set the sorting direction to ascending:
+          dir = "asc";
+          /*Make a loop that will continue until
+          no switching has been done:*/
+          while (switching) {
+            //start by saying: no switching is done:
+            switching = false;
+            rows = table.getElementsByTagName("TR");
+            /*Loop through all table rows (except the
+            first, which contains table headers):*/
+            for (i = 1; i < (rows.length - 1); i++) {
+              //start by saying there should be no switching:
+              shouldSwitch = false;
+              /*Get the two elements you want to compare,
+              one from current row and one from the next:*/
+              x = rows[i].getElementsByTagName("TD")[n];
+              y = rows[i + 1].getElementsByTagName("TD")[n];
+              /*check if the two rows should switch place,
+              based on the direction, asc or desc:*/
+              if (dir == "asc") {
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                  //if so, mark as a switch and break the loop:
+                  shouldSwitch= true;
+                  break;
+                }
+              } else if (dir == "desc") {
+                if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                  //if so, mark as a switch and break the loop:
+                  shouldSwitch= true;
+                  break;
+                }
+              }
+            }
+            if (shouldSwitch) {
+              /*If a switch has been marked, make the switch
+              and mark that a switch has been done:*/
+              rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+              switching = true;
+              //Each time a switch is done, increase this count by 1:
+              switchcount ++;
+            } else {
+              /*If no switching has been done AND the direction is "asc",
+              set the direction to "desc" and run the while loop again.*/
+              if (switchcount == 0 && dir == "asc") {
+                dir = "desc";
+                switching = true;
+              }
+            }
+          }
+        }
     },
     template:
     `
@@ -209,16 +263,16 @@ let collection = {
         </div>
         <hr>
         <div class="table-responsive">
-            <table class="table table-hover">
+            <table class="table table-hover" id="lp-collection-table">
                 <thead>
                     <tr>
-                        <th>Lowest Price</th>
-                        <th>Artist Name</th>
-                        <th>Album Name</th>
-                        <th>Album Year</th>
-                        <th>Album Genre</th>
-                        <th>Purchase Price</th>
-                        <th>Profit/Loss</th>
+                        <th v-on:click="sortLPs(0)">Lowest Price</th>
+                        <th v-on:click="sortLPs(1)">Artist Name</th>
+                        <th v-on:click="sortLPs(2)">Album Name</th>
+                        <th v-on:click="sortLPs(3)">Album Year</th>
+                        <th v-on:click="sortLPs(4)">Album Genre</th>
+                        <th v-on:click="sortLPs(5)">Purchase Price</th>
+                        <th v-on:click="sortLPs(6)">Profit/Loss</th>
                         <th>Cover Image</th>
                         <th>Release ID</th>
                     </tr>
@@ -235,6 +289,17 @@ let collection = {
                         <td><img v-bind:src="lp.lpImage" class="img-responsive table-img-center"></td>
                         <td>{{lp.releaseID}}</td>
                         <button type="submit" class="btn btn-danger btn-xs delete-item" v-on:click="deleteLP($event, lp.releaseID, i)">X</button>
+                    </tr>
+                    <tr>
+                        <td>$ total lowest price</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>$ total purchase price</td>
+                        <td>$ total profit loss</td>
+                        <td></td>
+                        <td></td>
                     </tr>
                 </tbody>
             </table>
