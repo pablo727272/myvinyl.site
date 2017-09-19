@@ -666,7 +666,11 @@ var mainVm = new Vue({
             }
             console.log(signupInfo)
             $.post('/signup', signupInfo, (data) => {
-                myRouter.push({ path: 'collection' })
+                if ( data.success ) {
+                    this.isLoggedIn = true
+                    myRouter.push({ path: 'collection' })
+
+                }
             })
         },
         // login method
