@@ -5,7 +5,10 @@ var bcrypt = require('bcryptjs')
 var sessionsModule = require('client-sessions')
 var request = require('request')
 var Discogs = require('disconnect').Client
+var HTTP = require('http')
+var HTTPS = require('https')
 var fs = require('fs')
+
 
 var dis = new Discogs({
     consumerKey: 'GknZtKeWnvYMYoCbKbfq',
