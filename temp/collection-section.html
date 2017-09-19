@@ -1,0 +1,42 @@
+<div class="container">
+    <div class="row text-center">
+        <h2>{{firstName}}'s Collection</h2>
+    </div>
+    <hr>
+    <div class="row text-center profile-buttons-row">
+        <router-link to="/add-lp"><button type="button" class="btn btn-success btn-md">Add LP</button></router-link>
+    </div>
+    <hr>
+    <div class="table-responsive">
+        <table class="table" id="lp-collection-table">
+            <thead>
+                <tr>
+                    <!-- MAYBE CALCULATE TOTALS? -->
+                    <th v-on:click="sortLPs(0)">Lowest Price<br>(Total)</th>
+                    <th v-on:click="sortLPs(1)">Artist Name</th>
+                    <th v-on:click="sortLPs(2)">Album Name</th>
+                    <th v-on:click="sortLPs(3)">Album Year</th>
+                    <th v-on:click="sortLPs(4)">Album Genre</th>
+                    <th v-on:click="sortLPs(5)">Purchase Price<br>(Total)</th>
+                    <th v-on:click="sortLPs(6)">Profit/Loss<br>(Total)</th>
+                    <th v-on:click="sortLPs(7)">Cover Image</th>
+                    <th v-on:click="sortLPs(8)">Release ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(lp, i) in collection">
+                    <td>$ {{lp.lowest_price || 0}}</td>
+                    <td>{{lp.artistName}}</td>
+                    <td><em>{{lp.albumName}}</em></td>
+                    <td>{{lp.albumYear}}</td>
+                    <td>{{lp.albumGenre}}</td>
+                    <td>$ {{lp.purchasePrice || 0}}</td>
+                    <td>$ {{lp.profitLoss || 0}}</td>
+                    <td><img v-bind:src="lp.lpImage" class="img-responsive table-img-center"></td>
+                    <td>{{lp.releaseID}}</td>
+                    <button type="submit" class="btn btn-danger btn-xs delete-item" v-on:click="deleteLP($event, lp.releaseID, i)">X</button>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

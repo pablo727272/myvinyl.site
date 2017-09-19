@@ -291,19 +291,6 @@ let collection = {
                         <button type="submit" class="btn btn-danger btn-xs delete-item" v-on:click="deleteLP($event, lp.releaseID, i)">X</button>
                     </tr>
                 </tbody>
-                <tfoot>
-                    <tr>
-                        <td>$ total lowest price</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>$ total purchase price</td>
-                        <td>$ total profit loss</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </tfoot>
             </table>
         </div>
     </div>
@@ -411,9 +398,8 @@ let addLP = {
     <div class="container">
 
         <div class="row text-center">
-            <hr>
             <h2>Add LP</h2>
-            <h4>Lookup your LP by Catalog Number</h4>
+            <h4>Search for your LP by Catalog Number</h4>
             <small>(Found on the cover, spine, or inner label, e.g. LPV-510)</small>
             <hr>
         </div>
@@ -425,7 +411,7 @@ let addLP = {
                     <input v-model="catalogNumber" type="text" class="catalogNumber form-control" placeholder="Catalog #" id="LPSearchBar">
                 </div>
                 <div class="col-md-3">
-                    <button class="btn btn-danger btn-md form-control" type="submit">Search!</button>
+                    <button class="btn btn-danger btn-md form-control" type="submit">Search</button>
                 </div>
             </form>
         </div>
@@ -690,7 +676,7 @@ var mainVm = new Vue({
             }
             $.post('/login', loginInfo, (data) => {
                 console.log('170918',data)
-                myRouter.push({ path: 'collection' })
+                myRouter.push({ path: '/' })
                 this.isLoggedIn = true
                 this.firstName = data.firstName
             })
