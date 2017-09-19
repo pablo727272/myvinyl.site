@@ -52,7 +52,7 @@ let index = {
                 <!-- Login modal button end  -->
             </div>
             <div v-else>
-                <b>Welcome {{firstName}}</b>!&nbsp;&nbsp; <a href="/logout"><button class="btn btn-danger btn-sm logout-button">Logout</button></a>
+                <h4>Welcome {{firstName}}</h4>!&nbsp;&nbsp; <a href="/logout"><button class="btn btn-danger btn-sm logout-button">Logout</button></a>
             </div>
         </div>
     </div>
