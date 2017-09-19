@@ -343,27 +343,27 @@ app.get('/api/v1/discogs/byrelease', function(req,res){
 })
 
 // USE THIS CODE ONCE PUSHED UP TO DROPLET
-// try {
-//     var httpsConfig = {
-//         key  : fs.readFileSync('/etc/letsencrypt/live/myvinyl.site/privkey.pem'),
-//         cert : fs.readFileSync('/etc/letsencrypt/live/myvinyl.site/cert.pem')
-//     }
-//     var httpsServer = HTTPS.createServer(httpsConfig, app)
-//     httpsServer.listen(443)
-// }
-// catch(error){
-//     console.log(error)
-//     console.log('could not set up HTTPS')
-// }
-// finally {
-//     console.log('this code runs regardless of whether the above code succeeded or failed')
-// }
-//
-// var httpApp = express()
-// httpApp.use(function(req, res){
-//     console.log(req.url)
-//     res.redirect('https://myvinyl.site' + req.url)
-// })
-// httpApp.listen(80)
+try {
+    var httpsConfig = {
+        key  : fs.readFileSync('/etc/letsencrypt/live/myvinyl.site/privkey.pem'),
+        cert : fs.readFileSync('/etc/letsencrypt/live/myvinyl.site/cert.pem')
+    }
+    var httpsServer = HTTPS.createServer(httpsConfig, app)
+    httpsServer.listen(443)
+}
+catch(error){
+    console.log(error)
+    console.log('could not set up HTTPS')
+}
+finally {
+    console.log('this code runs regardless of whether the above code succeeded or failed')
+}
 
-app.listen(8080)
+var httpApp = express()
+httpApp.use(function(req, res){
+    console.log(req.url)
+    res.redirect('https://myvinyl.site' + req.url)
+})
+httpApp.listen(80)
+
+// app.listen(8080)
