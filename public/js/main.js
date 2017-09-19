@@ -1,5 +1,23 @@
 // home page component
 let index = {
+    data: function(){
+        return {
+            firstName: '',
+        }
+    },
+    computed: {
+        isLoggedIn: function(){
+            console.log(mainVm && mainVm.isLoggedIn);
+            return mainVm && mainVm.isLoggedIn
+        }
+    },
+    created : function(){
+        $.get('/me', (dataFromServer) => {
+            console.log(this)
+            console.log('data from server',dataFromServer)
+            this.firstName = dataFromServer.firstName
+        })
+    },
     template:
     `
     <div class="container">
@@ -21,7 +39,7 @@ let index = {
             </div>
         </div>
         <br>
-        <div>
+        <div class="text-center">
             <div v-if="!isLoggedIn" class="row text-center login-buttons-row" id="home-page-login-buttons">
                 <!-- Signup modal button start  -->
                 <button type="button" class="btn btn-success btn-md" data-toggle="modal" data-target="#signupModal">Sign Up</button>
@@ -31,7 +49,7 @@ let index = {
                 <!-- Login modal button end  -->
             </div>
             <div v-else>
-                Welcome {{firstName}}!&nbsp;&nbsp; <button class="btn btn-danger btn-sm" id="logout-button" v-on:click="logout">Logout</button>
+                <b>Welcome {{firstName}}</b>!&nbsp;&nbsp; <button class="btn btn-danger btn-sm" id="logout-button" v-on:click="logout">Logout</button>
             </div>
         </div>
     </div>
