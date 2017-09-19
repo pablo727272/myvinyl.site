@@ -676,7 +676,7 @@ var mainVm = new Vue({
             }
             $.post('/login', loginInfo, (data) => {
                 console.log('170918',data)
-                myRouter.push({ path: '/' })
+                myRouter.push({ path: 'collection' })
                 this.isLoggedIn = true
                 this.firstName = data.firstName
             })
