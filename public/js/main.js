@@ -52,7 +52,7 @@ let index = {
                 <!-- Login modal button end  -->
             </div>
             <div v-else>
-                <b>Welcome {{firstName}}</b>!&nbsp;&nbsp; <button class="btn btn-danger btn-sm" id="logout-button" v-on:click="logout">Logout</button>
+                <b>Welcome {{firstName}}</b>!&nbsp;&nbsp; <a href="/logout"><button class="btn btn-danger btn-sm" class="logout-button" >Logout</button></a>
             </div>
         </div>
     </div>
@@ -689,10 +689,10 @@ var mainVm = new Vue({
             })
         },
         // logout method
-        logout: function(event){
-            event.preventDefault()
-            console.log('clicked on logout-button submit')
-            window.location.href = '/logout'
-        },
+        // logout: function(event){
+        //     event.preventDefault()
+        //     console.log('clicked on logout-button submit')
+        //     window.location.href = '/logout'
+        // },
     }
 })
