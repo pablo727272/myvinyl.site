@@ -273,8 +273,8 @@ let collection = {
                         <th v-on:click="sortLPs(4)">Album Genre</th>
                         <th v-on:click="sortLPs(5)">Purchase Price</th>
                         <th v-on:click="sortLPs(6)">Profit/Loss</th>
-                        <th>Cover Image</th>
-                        <th>Release ID</th>
+                        <th v-on:click="sortLPs(7)">Cover Image</th>
+                        <th v-on:click="sortLPs(8)">Release ID</th>
                     </tr>
                 </thead>
                 <tbody>
