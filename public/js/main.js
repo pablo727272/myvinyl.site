@@ -36,18 +36,32 @@ let index = {
     <div class="container">
         <div class="row text-center">
             <h1>Welcome to My Vinyl Site!</h1>
-            <h4>Input and track your LP collection...</h4>
-            <h4>Find out how much your collection is truly worth...</h4>
-            <h4>Check out some snazzy graphs about your collection...</h4>
+        </div>
+        <div class="row text-center">
+            <div class="col-md-4">
+                <img src="/images/lp-browsing-400.jpg" class="img-responsive img-circle"><br>
+                <h4>Input and track your LP collection</h4>
+            </div>
+            <div class="col-md-4">
+                <img src="/images/lp-surface-400.jpg" class="img-responsive img-circle"><br>
+                <h4>Find out how much your collection is truly worth</h4>
+            </div>
+            <div class="col-md-4">
+                <img src="/images/yellow-cartridge-400.jpg" class="img-responsive img-circle"><br>
+                <h4>Check out some snazzy graphs about your collection</h4>
+            </div>
         </div>
         <br>
-        <div class="row text-center login-buttons-row" id="home-page-login-buttons">
+        <div v-if="!isLoggedIn" class="row text-center login-buttons-row" id="home-page-login-buttons">
             <!-- Signup modal button start  -->
             <button type="button" class="btn btn-success btn-md" data-toggle="modal" data-target="#signupModal">Sign Up</button>
             <!-- Signup modal button end  -->
             <!-- Login modal button start  -->
             <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#loginModal">Login</button>
             <!-- Login modal button end  -->
+        </div>
+        <div v-else>
+            Welcome {{firstName}}!&nbsp;&nbsp; <button class="btn btn-danger btn-sm" id="logout-button" v-on:click="logout">Logout</button>
         </div>
     </div>
     `
@@ -86,29 +100,55 @@ let profile = {
             <h2>{{firstName}}'s Profile</h2>
         </div>
         <hr>
-        <div class="row">
-            <div class="col-md-8">
-                <h3>Name: {{firstName}} {{lastName}}</h3>
-                <h3>Favorite Artist: {{favoriteArtist}}</h3>
-                <h3>Desert Island LPs:</h3>
-                    <h4><ol>
-                        <li><em>{{desertIslandLP1}}</em></li>
-                        <li><em>{{desertIslandLP2}}</em></li>
-                        <li><em>{{desertIslandLP3}}</em></li>
-                    </ol></h4>
-            </div>
-            <div class="col-md-4">
-                <img src="http://lorempixel.com/300/300/abstract" class="img-responsive img-circle">
-            </div>
-        </div>
-        <br>
         <div class="row text-center profile-buttons-row">
             <router-link to="/add-lp"><button type="button" class="btn btn-success btn-md">Add LP</button></router-link>
             <router-link to="/collection"><button type="button" class="btn btn-primary btn-md">View Collection</button></router-link>
         </div>
-        <!-- CHARTS AREA START - WHY ISN'T THIS LOADING??? -->
-        <canvas id="genre-chart"></canvas>
+        <hr>
+        <!-- CHARTS AREA START -->
+        <div class="row text-center">
+            <div class="col-md-6">
+                <canvas id="decades-pie-chart" width="800" height="450"></canvas>
+            </div>
+            <div class="col-md-6">
+                <canvas id="genres-pie-chart" width="800" height="450"></canvas>
+            </div>
+        </div>
+        <br><br>
+        <div class="row text-center">
+            <div class="col-md-6">
+                <canvas id="lowest-price-pie-chart" width="800" height="450"></canvas>
+            </div>
+            <div class="col-md-6">
+                <canvas id="purchase-price-pie-chart" width="800" height="450"></canvas>
+            </div>
+        </div>
         <!-- CHARTS AREA END -->
+        <hr>
+        <div class="row text-center">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <h3>Name: {{firstName}} {{lastName}}</h3>
+                <h3>Favorite Artist: {{favoriteArtist}}</h3>
+                <h3>Desert Island LPs:</h3>
+                <h4><em>{{desertIslandLP1}}</em></h4>
+                <h4><em>{{desertIslandLP2}}</em></h4>
+                <h4><em>{{desertIslandLP3}}</em></h4>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <br><br>
+        <div class="row text-center">
+            <div class="col-md-4">
+                <img src="/images/lps-on-shelf-400.jpg" class="img-responsive img-circle">
+            </div>
+            <div class="col-md-4">
+                <img src="/images/red-45-400.jpg" class="img-responsive img-circle">
+            </div>
+            <div class="col-md-4">
+                <img src="/images/black-turntable-400.jpg" class="img-responsive img-circle">
+            </div>
+        </div>
     </div>
     `
 }
@@ -412,7 +452,7 @@ let about = {
             <div class="col-md-8">
                 <b><p>I created this site to allow lovers of vinyl LPs an easy way to catalog their collection and keep track of its current lowest price, so you can see what buyers are willing to pay at a bare minimum.</p>
                 <p>Please feel free to <a href="mailto:paul@longmontcomputer.com?subject=Feedback from myvinyl.site">email me</a> with any comments or suggestions. I welcome your feedback!</p></b>
-                <p>~Paul Humphrey, creator of myvinyl.site</p>
+                <p>~<a href="https:paulhumphrey.me" target="_blank">Paul Humphrey</a>, creator of myvinyl.site</p>
                 <p><i>Nothing sounds like vinyl.</i></p>
             </div>
         </div>
