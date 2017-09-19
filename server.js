@@ -230,6 +230,7 @@ app.post('/signup', function(req, res){
     // this user object has a plain-text password
     // we must hash the password before we save the user
     var newUser = new UserModel(req.body)
+    console.log('USER HERE', newUser)
     bcrypt.genSalt(11, function(saltErr, salt){
         if (saltErr) {console.log(saltErr)}
         console.log('salt generated: ', salt)
@@ -237,10 +238,12 @@ app.post('/signup', function(req, res){
         bcrypt.hash(newUser.password, salt, function(hashErr, hashedPassword){
             if ( hashErr){ console.log(hashErr) }
             newUser.password = hashedPassword
+            console.log('USER HERE 2', newUser)
 
             newUser.save(function(saveErr, user){
                 if ( saveErr ) { console.log(saveErr)}
                 else {
+                    console.log('USER HERE 3', newUser)
                     req.session._id = user._id // this line is what actually logs the user in.
                     res.send({success:'success!'})
                 }
