@@ -1,34 +1,3 @@
-// CHART CODE
-// new Chart(document.getElementById("line-chart-today"), {
-//   type: 'line',
-//   data: {
-//     labels: ['1 AM','2 AM','3 AM','4 AM','5 AM','6 AM','7 AM','8 AM','9 AM','10 AM','11 AM','12 PM','1 PM','2 PM','3 PM','4 PM','5 PM','6 PM','7 PM','8 PM','9 PM','10 PM','11 PM','12 AM'],
-//     datasets: [{
-//         data: [0,0,0,0,0,0,395,0,0,0,0,512,0,0,80,120,666,0,0,100,0,0,0,0],
-//         label: "Calories Ingested",
-//         borderColor: "green",
-//         fill: true,
-//       }, {
-//         data: [0,0,0,0,0,100,-50,0,0,50,0,100,50,0,50,50,100,0,0,100,0,0,0,0],
-//         label: "Mood",
-//         borderColor: "blue",
-//         fill: true,
-//       }, {
-//         data: [0,0,0,0,0,-300,0,0,0,-100,0,0,-100,0,0,0,0,0,0,-650,0,0,0,0],
-//         label: "Calories Burned",
-//         borderColor: "red",
-//         fill: true,
-//       },
-//     ]
-//   },
-//   options: {
-//     title: {
-//       display: true,
-//       text: 'Calories Ingested, Calories Burned, and Mood: Daily'
-//     }
-//   }
-// });
-
 // home page component
 let index = {
     template:
@@ -52,16 +21,18 @@ let index = {
             </div>
         </div>
         <br>
-        <div v-if="!isLoggedIn" class="row text-center login-buttons-row" id="home-page-login-buttons">
-            <!-- Signup modal button start  -->
-            <button type="button" class="btn btn-success btn-md" data-toggle="modal" data-target="#signupModal">Sign Up</button>
-            <!-- Signup modal button end  -->
-            <!-- Login modal button start  -->
-            <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#loginModal">Login</button>
-            <!-- Login modal button end  -->
-        </div>
-        <div v-else>
-            Welcome {{firstName}}!&nbsp;&nbsp; <button class="btn btn-danger btn-sm" id="logout-button" v-on:click="logout">Logout</button>
+        <div>
+            <div v-if="!isLoggedIn" class="row text-center login-buttons-row" id="home-page-login-buttons">
+                <!-- Signup modal button start  -->
+                <button type="button" class="btn btn-success btn-md" data-toggle="modal" data-target="#signupModal">Sign Up</button>
+                <!-- Signup modal button end  -->
+                <!-- Login modal button start  -->
+                <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#loginModal">Login</button>
+                <!-- Login modal button end  -->
+            </div>
+            <div v-else>
+                Welcome {{firstName}}!&nbsp;&nbsp; <button class="btn btn-danger btn-sm" id="logout-button" v-on:click="logout">Logout</button>
+            </div>
         </div>
     </div>
     `
@@ -274,6 +245,7 @@ let addLP = {
             releaseID: '',
             validator: validator,
             _id: '',
+            successBoxIsVisible: false,
         }
     },
     created: function(){
@@ -326,7 +298,14 @@ let addLP = {
             $.post('/newLP', createLPInfo, (data) => {
                 collection._id = data
                 console.log('newlp data',collection._id);
+                // pop up box showing user that lp was added successfully
+                this.successBoxIsVisible = true
+                setTimeout(() => {
+                    this.successBoxIsVisible = false
+                },2000)
+                // refresh the page
                 myRouter.push({ path: 'add-lp' })
+                // clear out the input fields
                 this.catalogNumber = ''
                 this.artistName = ''
                 this.albumName = ''
@@ -349,8 +328,8 @@ let addLP = {
         <div class="row text-center">
             <hr>
             <h2>Add LP</h2>
-            <h4>Lookup your LP by Album Name and/or Catalog Number</h4>
-            <small>(Catalog # found on the cover, spine, or inner label)</small>
+            <h4>Lookup your LP by Catalog Number</h4>
+            <small>(Found on the cover, spine, or inner label, e.g. LPV-510)</small>
             <hr>
         </div>
 
@@ -358,7 +337,7 @@ let addLP = {
             <form id="add-lp-form" v-on:submit="getDiscogsLP($event)">
                 <div class="col-md-2"></div>
                 <div class="col-md-5">
-                    <input v-model="catalogNumber" type="text" class="catalogNumber form-control" placeholder="Album Name and/or Catalog #" id="LPSearchBar">
+                    <input v-model="catalogNumber" type="text" class="catalogNumber form-control" placeholder="Catalog #" id="LPSearchBar">
                 </div>
                 <div class="col-md-3">
                     <button class="btn btn-danger btn-md form-control" type="submit">Search!</button>
@@ -422,7 +401,9 @@ let addLP = {
                 <small><a href="http://www.recordcollectorsguild.org/modules.php?op=modload&name=Sections&file=index&req=viewarticle&artid=17&page=1" target="_blank">Click here to read about condition grading guidelines</a>.</small>
                 <h3>Purchase Price?</h3>
                 <input type="text" class="form-control" placeholder="for example, 0, 1, or 1.75" v-model="purchasePrice">
-                <div v-if="!validator.isEmpty(purchasePrice) && !validator.isFloat(purchasePrice,{min:0})">Please enter a valid value: e.g. 0, 1, or 1.75</div>
+                <div v-if="!validator.isEmpty(purchasePrice) && !validator.isFloat(purchasePrice,{min:0})">
+                    Please enter a valid value: e.g. 0, 1, or 1.75
+                </div>
                 <br>
                 <button type="submit" class="form-control btn btn-success" v-on:click="createLP">
                     ADD LP TO COLLECTION
@@ -431,6 +412,8 @@ let addLP = {
             </div>
             <div class="col-md-2"></div>
         </div>
+
+        <div id="lp-added-success" v-if="successBoxIsVisible"><span class="lp-added-success-text">LP Added Successfully!</span></div>
 
     </div>
     `

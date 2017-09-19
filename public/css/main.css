@@ -64,6 +64,7 @@ img {
     margin: auto;
 }
 
+/*404 page*/
 .fourohfour {
     background-image: url("/images/stars.jpg");
     margin: 0 0 -20px 0;
@@ -74,7 +75,26 @@ img {
     color: lightgray;
 }
 
+/*thumbnail album covers*/
 .lpImage {
     max-height: 200px;
     max-width: 200px;
+}
+
+/*popup window showing lp added successfully*/
+#lp-added-success {
+    position:fixed;
+    left: 50%;
+    top: 50%;
+    -ms-transform: translate(-50%,-50%);
+    -moz-transform:translate(-50%,-50%);
+    -webkit-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+    width: 160px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 0;
+    z-index: 1;
 }
