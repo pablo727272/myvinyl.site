@@ -26,16 +26,19 @@ let index = {
         </div>
         <div class="row text-center">
             <div class="col-md-4">
-                <img src="/images/lp-browsing-400.jpg" class="img-responsive img-circle"><br>
+                <router-link to="/add-lp"><img src="/images/lp-browsing-400.jpg" class="img-responsive img-circle"></router-link>
+                <br>
                 <h4>Input and track your LP collection</h4>
             </div>
             <div class="col-md-4">
-                <img src="/images/lp-surface-400.jpg" class="img-responsive img-circle"><br>
-                <h4>Find out how much your collection is truly worth</h4>
+                <router-link to="/collection"><img src="/images/lp-surface-400.jpg" class="img-responsive img-circle"></router-link>
+                <br>
+                <h4>Find out how much your collection is worth</h4>
             </div>
             <div class="col-md-4">
-                <img src="/images/yellow-cartridge-400.jpg" class="img-responsive img-circle"><br>
-                <h4>Check out some snazzy graphs about your collection</h4>
+                <router-link to="/profile"><img src="/images/yellow-cartridge-400.jpg" class="img-responsive img-circle"></router-link>
+                <br>
+                <h4>Check your collection metrics</h4>
             </div>
         </div>
         <br>
