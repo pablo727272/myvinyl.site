@@ -6,3 +6,5 @@
 5. display discgos api data, current lowest value, etc...
 6. if user wants to add lp, click submit, save LP to database as a unique lp id
 7. on collection page, append a <table> with rows of new LP data...  sortable "columns"...  button to delete any LPs (remove from database)
+
+something
