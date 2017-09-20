@@ -497,8 +497,8 @@ let addLP = {
 let about = {
     template:
     `
-    <div class="container">
-        <div class="row text-center">
+    <div class="container text-center">
+        <div class="row">
             <h2>About</h2>
         </div>
         <hr>
