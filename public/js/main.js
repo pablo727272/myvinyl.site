@@ -504,7 +504,7 @@ let about = {
         <hr>
         <div class="row">
             <div class="col-md-4">
-                <img src="/images/paul-headshot-300.png" class="img-responsive img-circle">
+                <img src="/images/paul-headshot-400.png" class="img-responsive img-circle">
             </div>
             <div class="col-md-8">
                 <b><p>I created this site to allow lovers of vinyl LPs an easy way to catalog their collection and keep track of its current lowest price, so you can see what buyers are willing to pay at a bare minimum.</p>
