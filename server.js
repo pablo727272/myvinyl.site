@@ -354,20 +354,22 @@ try {
     }
     var httpsServer = HTTPS.createServer(httpsConfig, app)
     httpsServer.listen(443)
+    var httpApp = express()
+    httpApp.use(function(req, res){
+        console.log(req.url)
+        res.redirect('https://myvinyl.site' + req.url)
+    })
+    httpApp.listen(80)
 }
 catch(error){
     console.log(error)
     console.log('could not set up HTTPS')
+    app.listen(8080)
 }
 finally {
     console.log('this code runs regardless of whether the above code succeeded or failed')
 }
 
-var httpApp = express()
-httpApp.use(function(req, res){
-    console.log(req.url)
-    res.redirect('https://myvinyl.site' + req.url)
-})
-httpApp.listen(80)
+
 
 // app.listen(8080)
