@@ -509,7 +509,7 @@ let about = {
             <div class="col-md-8">
                 <b><p>I created this site to allow lovers of vinyl LPs an easy way to catalog their collection and keep track of its current lowest price, so you can see what buyers are willing to pay at a bare minimum.</p>
                 <p>Please feel free to <a href="mailto:paul@longmontcomputer.com?subject=Feedback from myvinyl.site">email me</a> with any comments or suggestions. I welcome your feedback!</p></b>
-                <p>~<a href="https:paulhumphrey.me" target="_blank">Paul Humphrey</a>, creator of myvinyl.site</p>
+                <p>~<a href="https://paulhumphrey.me" target="_blank">Paul Humphrey</a>, creator of myvinyl.site</p>
                 <p><i>Nothing sounds like vinyl.</i></p>
             </div>
         </div>
