@@ -22,14 +22,14 @@ app.use(express.static('./public'))
 
 // sessions middleware
 app.use(sessionsModule({
-    cookieName: 'auth-cookie',  // front-end cookie name
+    cookieName: 'auth-cookie',    // front-end cookie name
     secret: 'Dr@g0nB4ll$',        // the encryption password : keep this safe
-    requestKey: 'session',    // we can access our sessions at req.session,
+    requestKey: 'session',        // we can access our sessions at req.session,
     duration: (86400 * 1000) * 7, // one week in milliseconds
     cookie: {
-        ephemeral: false,     // when true, cookie expires when browser is closed
-        httpOnly: true,       // when true, the cookie is not accesbile via front-end JavaScript
-        secure: false         // when true, cookie will only be read when sent over HTTPS
+        ephemeral: false,         // when true, cookie expires when browser is closed
+        httpOnly: true,           // when true, the cookie is not accesbile via front-end JavaScript
+        secure: false             // when true, cookie will only be read when sent over HTTPS
     }
 })) // encrypted cookies!
 
@@ -165,12 +165,12 @@ var checkIfLoggedIn = function(req, res, next){
 
 var checkIfLoggedInForAjax = function(req, res, next){
     if ( req.session._id ) {
-        console.log("user is logged in")
+        console.log("user is logged in for ajax")
         next()
     }
     else {
-        console.log("no one is logged in")
-        res.send({failure:'not logged in'})
+        console.log("no one is logged in for ajax")
+        res.send({failure:'not logged in for ajax'})
     }
 }
 
@@ -229,7 +229,7 @@ app.get('/logout', function(req, res){
     res.redirect('/')
 })
 
-// create a new user, salt and has password, save it in the db
+// create a new user, salt and hash password, save it in the db
 app.post('/signup', function(req, res){
     // this user object has a plain-text password
     // we must hash the password before we save the user
@@ -333,11 +333,12 @@ app.get('/api/v1/discogs/byrelease', function(req,res){
             type:'release',
         },
         function(err, response, body){
-        if (err) {console.log(err);}
+        if (err) {console.log('error',err);}
         console.log('res', response)
         // console.log('res', body)
         let releaseID = response.results[0].id
         dis.getRelease(releaseID,function(err,response,body){
+            if (err) {console.log('error',err);}
             console.log(response);
             console.log(body);
             res.status(200).send(response);

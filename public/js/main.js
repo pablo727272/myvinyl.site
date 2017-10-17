@@ -13,7 +13,7 @@ let index = {
     },
     created : function(){
         $.get('/me', (dataFromServer) => {
-            console.log(this)
+            console.log('this from /me',this)
             console.log('data from server',dataFromServer)
             this.firstName = dataFromServer.firstName
         })
@@ -154,6 +154,8 @@ let collection = {
             albumName: '',
             albumYear: '',
             albumGenre: '',
+            mediaCondition: '',
+            sleeveCondition: '',
             purchasePrice: '',
             lowest_price: '',
             collection: [],
@@ -274,10 +276,12 @@ let collection = {
                         <th v-on:click="sortLPs(2)">Album Name</th>
                         <th v-on:click="sortLPs(3)">Album Year</th>
                         <th v-on:click="sortLPs(4)">Album Genre</th>
-                        <th v-on:click="sortLPs(5)">Purchase Price</th>
-                        <th v-on:click="sortLPs(6)">Profit/Loss</th>
-                        <th v-on:click="sortLPs(7)">Cover Image</th>
-                        <th v-on:click="sortLPs(8)">Release ID</th>
+                        <th v-on:click="sortLPs(5)">Media Condition</th>
+                        <th v-on:click="sortLPs(6)">Sleeve Condition</th>
+                        <th v-on:click="sortLPs(7)">Purchase Price</th>
+                        <th v-on:click="sortLPs(8)">Profit/Loss</th>
+                        <th v-on:click="sortLPs(9)">Cover Image</th>
+                        <th v-on:click="sortLPs(10)">Release ID</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -287,6 +291,8 @@ let collection = {
                         <td><em>{{lp.albumName}}</em></td>
                         <td>{{lp.albumYear}}</td>
                         <td>{{lp.albumGenre}}</td>
+                        <td>{{lp.mediaCondition}}</td>
+                        <td>{{lp.sleeveCondition}}</td>
                         <td>$ {{lp.purchasePrice || 0}}</td>
                         <td>$ {{lp.profitLoss || 0}}</td>
                         <td><img v-bind:src="lp.lpImage" class="img-responsive table-img-center"></td>
