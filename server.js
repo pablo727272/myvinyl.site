@@ -194,20 +194,20 @@ app.use(function(req, res, next) {
 // })
 
 // WHAT DOES THIS DO?????
-app.get('/dashboard', checkIfLoggedIn, function(req, res){
-    UserModel.findOne({_id: req.session._id}, function(err, user){
-        if ( user ) {
-            res.send(`Hello, ${user.username}. Welcome to your dashboard!
-                <a href="/logout">Log Out</a>
-            `)
-        }
-        else {
-            res.send("you don't belong here!")
-        }
-    })
-})
+// app.get('/dashboard', checkIfLoggedIn, function(req, res){
+//     UserModel.findOne({_id: req.session._id}, function(err, user){
+//         if ( user ) {
+//             res.send(`Hello, ${user.username}. Welcome to your dashboard!
+//                 <a href="/logout">Log Out</a>
+//             `)
+//         }
+//         else {
+//             res.send("you don't belong here!")
+//         }
+//     })
+// })
 
-// DO I NEED TO ADD THE LPModel TO THIS???  I NEED TO GRAB THE LP'S TIED TO THE USER THAT IS LOGGED IN TO FLESH OUT THE TABLE ON THE COLLECTION PAGE!!
+// GRAB THE LP'S TIED TO THE USER THAT IS LOGGED IN TO FLESH OUT THE TABLE ON THE COLLECTION PAGE
 app.get('/me', checkIfLoggedInForAjax, function(req, res){
     UserModel.findOne({_id:req.session._id}, function(err, user){
         console.log('user',user);
@@ -236,18 +236,18 @@ app.post('/signup', function(req, res){
     var newUser = new UserModel(req.body)
     console.log('USER HERE', newUser)
     bcrypt.genSalt(11, function(saltErr, salt){
-        if (saltErr) {console.log(saltErr)}
+        if (saltErr) {console.log('problem generating salt',saltErr)}
         console.log('salt generated: ', salt)
 
         bcrypt.hash(newUser.password, salt, function(hashErr, hashedPassword){
-            if ( hashErr){ console.log(hashErr) }
+            if ( hashErr){ console.log('problem hashing password',hashErr) }
             newUser.password = hashedPassword
-            console.log('USER HERE 2', newUser)
+            console.log('new user created', newUser)
 
             newUser.save(function(saveErr, user){
                 if ( saveErr ) { console.log(saveErr)}
                 else {
-                    console.log('USER HERE 3', newUser)
+                    console.log('new user saved to db', newUser)
                     req.session._id = user._id // this line is what actually logs the user in.
                     res.send({success:'success!'})
                 }
@@ -263,7 +263,7 @@ app.post('/newLP', function(req, res){
     var newLP = new LPModel(req.body)
     console.log('new lp',newLP);
     newLP.save(function(saveErr, lp){
-        if ( saveErr ) { console.log(saveErr)}
+        if ( saveErr ) { console.log('error saving LP', saveErr)}
         else {
             res.status(200).send('success!')
         }
@@ -274,11 +274,12 @@ app.post('/newLP', function(req, res){
 app.post('/removeLP', function(req, res){
     console.log('req body id',req.body.id);
     LPModel.remove( { releaseID : req.body.id }, function(err){
-        if (err) { console.log('err',err)}
+        if (err) { console.log('error deleting LP', err)}
         res.send();
     } )
 })
 
+// LOGIN
 app.post('/login', function(req, res){
     if (req.session._id) {
         UserModel.findById(
@@ -322,6 +323,7 @@ app.post('/login', function(req, res){
     }
 })
 
+// API CALL TO DISCOGS TO GET LP INFO
 app.get('/api/v1/discogs/byrelease', function(req,res){
     console.log('sending data to discogs');
     console.log('req query name',req.query.catalogNumber);
@@ -370,7 +372,3 @@ catch(error){
 finally {
     console.log('this code runs regardless of whether the above code succeeded or failed')
 }
-
-
-
-// app.listen(8080)

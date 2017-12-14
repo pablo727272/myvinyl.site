@@ -1,7 +1,7 @@
 {
   "name": "myvinyl.site",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.2.0",
+  "description": "vue.js SPA using discogs api call to track lowest selling price of vinyl lps",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -16,6 +16,7 @@
     "disconnect": "^1.2.1",
     "express": "^4.15.4",
     "mongoose": "^4.11.11",
+    "nodemon": "^1.12.7",
     "request": "^2.81.0"
   }
 }

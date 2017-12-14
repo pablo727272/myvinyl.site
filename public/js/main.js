@@ -294,7 +294,7 @@ let collection = {
                         <td>{{lp.mediaCondition}}</td>
                         <td>{{lp.sleeveCondition}}</td>
                         <td>$ {{lp.purchasePrice || 0}}</td>
-                        <td>$ {{lp.profitLoss || 0}}</td>
+                        <td>$ {{lp.profitLoss.toFixed(2) || 0}}</td>
                         <td><img v-bind:src="lp.lpImage" class="img-responsive table-img-center"></td>
                         <td>{{lp.releaseID}}</td>
                         <button type="submit" class="btn btn-danger btn-xs delete-item" v-on:click="deleteLP($event, lp.releaseID, i)">X</button>
